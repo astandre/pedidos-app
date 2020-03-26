@@ -1,0 +1,82 @@
+<p>pedidos-manage works!</p>
+<ul *ngFor="let mesa of mesas">
+  <li>{{mesa.mesa}}</li>
+</ul>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">
+  Nuevo item
+</button>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Item</th>
+    <th scope="col">Cantidad</th>
+    <th scope="col">Especificacion</th>
+    <th scope="col">LLevar</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <th scope="row">1</th>
+    <td>Mark</td>
+    <td>Otto</td>
+    <td>@mdo</td>
+    <td>@mdo</td>
+  </tr>
+  <tr>
+    <th scope="row">2</th>
+    <td>Jacob</td>
+    <td>Thornton</td>
+    <td>@fat</td>
+    <td>@fat</td>
+  </tr>
+  <tr>
+    <th scope="row">3</th>
+    <td>Larry</td>
+    <td>the Bird</td>
+    <td>the Bird</td>
+    <td>@twitter</td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="productosModal" tabindex="-1" role="dialog" aria-labelledby="productosModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productosModalLabel">Productos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="productosCollapse">
+          <div *ngFor="let categoria of categorias">
+            <button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse"
+                    [attr.data-target]="'#collapseExample'+categoria.idCategoria"
+                    aria-expanded="false" [attr.aria-controls]="'collapseExample'+categoria.idCategoria"
+                    data-parent="#productosCollapse">
+              {{categoria.nombre}}
+            </button>
+            <div class="collapse" [id]="'collapseExample'+categoria.idCategoria">
+              <div class="card card-body" *ngFor="let producto of categoria.productos">
+                <button class="btn btn-success btn-lg btn-block" type="button">{{producto.nombre}}</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
