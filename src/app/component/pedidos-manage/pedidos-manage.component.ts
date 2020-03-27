@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Mesa} from '../../model/mesa';
 import {PedidosHandlerService} from '../../services/pedidos-handler.service';
 import {Categoria} from '../../model/categoria';
+import {Producto} from '../../model/producto';
+import {Item} from '../../model/item';
+import {FormBuilder} from '@angular/forms';
 
 @Component({
   selector: 'app-pedidos-manage',
@@ -12,8 +15,12 @@ export class PedidosManageComponent implements OnInit {
 
   categorias: Array<Categoria>;
   mesas: Array<Mesa>;
+  items: Array<Item> = [];
+  newItemAux: Item;
+  itemsForm;
 
-  constructor(private pedidosHandlerService: PedidosHandlerService) {
+
+  constructor(private pedidosHandlerService: PedidosHandlerService, private formBuilder: FormBuilder) {
     this.pedidosHandlerService.getAllProductos().subscribe(data => {
         // console.log(data);
         this.categorias = data;
@@ -28,7 +35,32 @@ export class PedidosManageComponent implements OnInit {
       error => {
         console.log(error);
       });
+
+
+    this.itemsForm = this.formBuilder.group({
+      cantidad: 0,
+      especificacion: '',
+      llevar: false,
+    });
   }
+
+  newItem(newItem: Producto) {
+    this.newItemAux = new Item(newItem);
+  }
+
+  addItem(data) {
+    this.newItemAux.llevar = data.llevar;
+    this.newItemAux.especificacion = data.especificacion;
+    this.newItemAux.cantidad = data.cantidad;
+    this.items.push(this.newItemAux);
+    this.itemsForm.reset();
+    this.newItemAux = null;
+  }
+
+  deleteItem(index: number) {
+    this.items.splice(index, 1);
+  }
+
 
   ngOnInit() {
   }
