@@ -49,13 +49,41 @@ export class PedidosManageComponent implements OnInit {
   }
 
   addItem(data) {
-    this.newItemAux.llevar = data.llevar;
-    this.newItemAux.especificacion = data.especificacion;
-    this.newItemAux.cantidad = data.cantidad;
-    this.items.push(this.newItemAux);
-    this.itemsForm.reset();
+    console.log(data);
+    if (this.newItemAux.cantidad > 0) {
+      this.newItemAux.llevar = data.llevar;
+      this.newItemAux.especificacion = data.especificacion;
+      this.items.push(this.newItemAux);
+      this.itemsForm.reset();
+    }
+    // else if (data.cantidad > 0 && this.newItemAux.cantidad === 0) {
+    //   this.newItemAux.llevar = data.llevar;
+    //   this.newItemAux.especificacion = data.especificacion;
+    //   this.newItemAux.cantidad = data.cantidad;
+    //   this.items.push(this.newItemAux);
+    //   this.itemsForm.reset();
+    // }
+
     this.newItemAux = null;
   }
+
+  // itemValueChanged(data) {
+  //   this.newItemAux.cantidad = data.target.value;
+  // fpr thtml
+  // (change)="itemValueChanged($event)"
+  // }
+
+  addOneItem() {
+    this.newItemAux.cantidad += 1;
+  }
+
+  lessOneItem() {
+    if (this.newItemAux.cantidad > 0) {
+      this.newItemAux.cantidad -= 1;
+    }
+
+  }
+
 
   deleteItem(index: number) {
     this.items.splice(index, 1);

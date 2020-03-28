@@ -11,6 +11,7 @@ export class Item {
   constructor(producto: Producto) {
     this.producto = producto;
     this._llevar = false;
+    this._cantidad = 0;
   }
 
   get cantidad(): number {
