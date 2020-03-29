@@ -1,20 +1,73 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <ul *ngFor="let mesa of mesas">
-        <li>{{mesa.mesa}}</li>
-      </ul>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active" aria-current="page">Home</li>
+        </ol>
+      </nav>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="btn-group" role="group" aria-label="Controles Pedido">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">
-          Nuevo item
-        </button>
-        <button type="button" class="btn btn-warning">Previsualizar</button>
-        <button type="button" class="btn btn-success">Enviar</button>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="mesaOptions">Mesas:</label>
+        </div>
+        <select class="custom-select" id="mesaOptions" (change)="changeMesa($event)">
+          <option>Seleccionar..</option>
+          <option *ngFor="let mesa of mesas; index as i" value="{{i}}">{{mesa.mesa}}</option>
+        </select>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="btn-toolbar" role="toolbar" aria-label="Controles Pedido">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">
+            Nuevo item
+          </button>
+          <button type="button" class="btn btn-warning" (click)="prevPedido()">Previsualizar</button>
+          <button type="button" class="btn btn-success">Enviar</button>
+        </div>
+        <!--      <div class="btn-group" role="group" aria-label="Controles Pedido">-->
+        <!--        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">-->
+        <!--          Nuevo item-->
+        <!--        </button>-->
+        <!--        <button type="button" class="btn btn-warning" (click)="previsualizarPedido()">Previsualizar</button>-->
+        <!--        <button type="button" class="btn btn-success">Enviar</button>-->
+        <!--      </div>-->
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row" *ngIf="prevPedidoObj">
+    <div class="col-md-12">
+
+      <p>Total: {{prevPedidoObj.total}}</p>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">Item</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Especificacion</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Subtotal</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let prevItem of prevPedidoObj.items">
+          <td>{{prevItem.nombre}}</td>
+          <td>{{prevItem.cantidad}}</td>
+          <td>{{prevItem.especificacion}}</td>
+          <td>{{prevItem.precio}}</td>
+          <td>{{prevItem.subtotal}}</td>
+        </tr>
+
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="row">
@@ -42,7 +95,8 @@
             </ng-template>
             <td>{{item.cantidad}}</td>
             <td>
-              <button type="button" class="btn btn-warning">
+              <button type="button" class="btn btn-warning" data-target="#itemsModal" data-toggle="modal"
+                      (click)="editItem(i)">
                 <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
                      xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd"
@@ -127,7 +181,8 @@
           <!--          <div class="form-group">-->
           <label for="cantidad">Cantidad</label>
           <div class="input-group">
-            <input id="cantidad" class="form-control" aria-describedby="basic-addon2" placeholder="Ingrese la cantidad"
+            <input id="cantidad" class="form-control" aria-describedby="basic-addon2"
+                   placeholder="Ingrese la cantidad"
                    type="number" formControlName="cantidad" required pattern="[1-9]" value="{{newItemAux.cantidad}}"
                    [attr.disabled]="true">
             <div class="input-group-append">
@@ -151,7 +206,7 @@
           <div class="form-group">
             <label for="especificacion">Especificacion</label>
             <textarea class="form-control" id="especificacion" aria-describedby="especificacionHelp"
-                      rows="3"></textarea>
+                      rows="3" formControlName="especificacion"></textarea>
             <small id="especificacionHelp" class="form-text text-muted">Detalle las instrucciones del pedido</small>
           </div>
           <!--For llevar-->

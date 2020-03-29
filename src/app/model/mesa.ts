@@ -1,10 +1,10 @@
 export class Mesa {
-  idMesa: string;
+  id_mesa: string;
   codigo: string;
   mesa: string;
 
-  constructor(idMesa: string, codigo: string, mesa: string) {
-    this.idMesa = idMesa;
+  constructor(id_mesa: string, codigo: string, mesa: string) {
+    this.id_mesa = id_mesa;
     this.codigo = codigo;
     this.mesa = mesa;
   }

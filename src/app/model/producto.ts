@@ -1,15 +1,12 @@
 export class Producto {
-  idProducto: string;
+  id_producto: string;
   nombre: string;
   descripcion: string;
   disponible: boolean;
   precio: number;
 
-  // categoria: string;
-
-
-  constructor(idProducto: string, nombre: string, descripcion: string, disponible: boolean, precio: number) {
-    this.idProducto = idProducto;
+  constructor(id_producto: string, nombre: string, descripcion: string, disponible: boolean, precio: number) {
+    this.id_producto = id_producto;
     this.nombre = nombre;
     this.descripcion = descripcion;
     this.disponible = disponible;

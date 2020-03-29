@@ -4,6 +4,7 @@ import {PedidosHandlerService} from '../../services/pedidos-handler.service';
 import {Categoria} from '../../model/categoria';
 import {Producto} from '../../model/producto';
 import {Item} from '../../model/item';
+import {Pedido} from '../../model/pedido';
 import {FormBuilder} from '@angular/forms';
 
 @Component({
@@ -18,6 +19,10 @@ export class PedidosManageComponent implements OnInit {
   items: Array<Item> = [];
   newItemAux: Item;
   itemsForm;
+  editIndex: number;
+  pedido: Pedido;
+  currentMesa: Mesa;
+  prevPedidoObj: Pedido;
 
 
   constructor(private pedidosHandlerService: PedidosHandlerService, private formBuilder: FormBuilder) {
@@ -36,7 +41,8 @@ export class PedidosManageComponent implements OnInit {
         console.log(error);
       });
 
-
+    this.editIndex = null;
+    this.pedido = new Pedido();
     this.itemsForm = this.formBuilder.group({
       cantidad: 0,
       especificacion: '',
@@ -45,25 +51,24 @@ export class PedidosManageComponent implements OnInit {
   }
 
   newItem(newItem: Producto) {
-    this.newItemAux = new Item(newItem);
+    this.newItemAux = new Item();
+    this.newItemAux.producto = newItem;
   }
 
   addItem(data) {
-    console.log(data);
+    // console.log(data);
+
     if (this.newItemAux.cantidad > 0) {
       this.newItemAux.llevar = data.llevar;
       this.newItemAux.especificacion = data.especificacion;
-      this.items.push(this.newItemAux);
+      if (this.editIndex != null) {
+        this.items[this.editIndex] = this.newItemAux;
+      } else {
+        this.items.push(this.newItemAux);
+      }
+      this.editIndex = null;
       this.itemsForm.reset();
     }
-    // else if (data.cantidad > 0 && this.newItemAux.cantidad === 0) {
-    //   this.newItemAux.llevar = data.llevar;
-    //   this.newItemAux.especificacion = data.especificacion;
-    //   this.newItemAux.cantidad = data.cantidad;
-    //   this.items.push(this.newItemAux);
-    //   this.itemsForm.reset();
-    // }
-
     this.newItemAux = null;
   }
 
@@ -89,6 +94,33 @@ export class PedidosManageComponent implements OnInit {
     this.items.splice(index, 1);
   }
 
+  editItem(index: number) {
+    this.newItemAux = this.items[index];
+    this.editIndex = index;
+  }
+
+
+  changeMesa(mesaValue) {
+    this.currentMesa = this.mesas[mesaValue.target.value];
+  }
+
+  prevPedido() {
+    if (this.items.length > 0 && this.currentMesa != null) {
+      this.pedido.mesa = this.currentMesa;
+      this.pedido.items = this.items;
+      this.pedidosHandlerService.postPrevPedido(this.pedido)
+        .subscribe(data => {
+            console.log('final ', data);
+            this.prevPedidoObj = data;
+          },
+          error => {
+            console.log(error);
+          }
+    );
+    } else {
+      console.log('Pedido vacio');
+    }
+  }
 
   ngOnInit() {
   }
