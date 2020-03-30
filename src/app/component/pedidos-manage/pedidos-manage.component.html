@@ -28,8 +28,12 @@
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">
             Nuevo item
           </button>
-          <button type="button" class="btn btn-warning" (click)="prevPedido()">Previsualizar</button>
-          <button type="button" class="btn btn-success">Enviar</button>
+          <button type="button" class="btn btn-warning" (click)="prevPedido()" data-toggle="modal"
+                  data-target="#prevPedidoModal">
+            Previsualizar
+          </button>
+          <button type="button" class="btn btn-success" (click)="sendPedido()">Enviar</button>
+          <button type="button" class="btn btn-danger" (click)="deletePedido()">Borrar</button>
         </div>
         <!--      <div class="btn-group" role="group" aria-label="Controles Pedido">-->
         <!--        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">-->
@@ -42,34 +46,7 @@
     </div>
   </div>
   <hr>
-  <div class="row" *ngIf="prevPedidoObj">
-    <div class="col-md-12">
 
-      <p>Total: {{prevPedidoObj.total}}</p>
-      <table class="table">
-        <thead>
-        <tr>
-          <th scope="col">Item</th>
-          <th scope="col">Cantidad</th>
-          <th scope="col">Especificacion</th>
-          <th scope="col">Precio</th>
-          <th scope="col">Subtotal</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr *ngFor="let prevItem of prevPedidoObj.items">
-          <td>{{prevItem.nombre}}</td>
-          <td>{{prevItem.cantidad}}</td>
-          <td>{{prevItem.especificacion}}</td>
-          <td>{{prevItem.precio}}</td>
-          <td>{{prevItem.subtotal}}</td>
-        </tr>
-
-        </tbody>
-      </table>
-    </div>
-  </div>
   <div class="row">
     <div class="col-md-12">
       <table class="table">
@@ -91,9 +68,9 @@
           <tr *ngFor="let item of items; index as i">
             <td *ngIf="item.llevar; else itemllevar" class="table-warning">{{item.producto.nombre}}</td>
             <ng-template #itemllevar>
-              <td>{{item.producto.nombre}}</td>
+              <td><p>{{item.producto.nombre}}</p></td>
             </ng-template>
-            <td>{{item.cantidad}}</td>
+            <td><p>{{item.cantidad}}</p></td>
             <td>
               <button type="button" class="btn btn-warning" data-target="#itemsModal" data-toggle="modal"
                       (click)="editItem(i)">
@@ -139,12 +116,12 @@
         <div id="productosCollapse">
           <div *ngFor="let categoria of categorias">
             <button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse"
-                    [attr.data-target]="'#collapseExample'+categoria.idCategoria"
-                    aria-expanded="false" [attr.aria-controls]="'collapseExample'+categoria.idCategoria"
+                    [attr.data-target]="'#collapseExample'+categoria.id_categoria"
+                    aria-expanded="false" [attr.aria-controls]="'collapseExample'+categoria.id_categoria"
                     data-parent="#productosCollapse">
               {{categoria.nombre}}
             </button>
-            <div class="collapse" [id]="'collapseExample'+categoria.idCategoria">
+            <div class="collapse" [id]="'collapseExample'+categoria.id_categoria">
               <div class="card card-body" *ngFor="let producto of categoria.productos">
                 <button class="btn btn-success btn-lg btn-block" type="button"
                         (click)="newItem(producto)" data-target="#itemsModal"
@@ -176,14 +153,15 @@
         </button>
       </div>
       <div *ngIf="newItemAux;  else newItemContinue" class="modal-body">
-        <form [formGroup]="itemsForm" (ngSubmit)="addItem(itemsForm.value)">
+        <p><em>{{newItemAux.producto.descripcion}}</em></p>
+        <form [formGroup]="itemsForm" (ngSubmit)="addItem(itemsForm.value)" #itemForm="ngForm">
           <!--For cantidad-->
-          <!--          <div class="form-group">-->
           <label for="cantidad">Cantidad</label>
           <div class="input-group">
             <input id="cantidad" class="form-control" aria-describedby="basic-addon2"
                    placeholder="Ingrese la cantidad"
-                   type="number" formControlName="cantidad" required pattern="[1-9]" value="{{newItemAux.cantidad}}"
+                   type="number" formControlName="cantidad" required pattern="[1-9]"
+                   [(ngModel)]="newItemAux.cantidad"
                    [attr.disabled]="true">
             <div class="input-group-append">
               <button class="btn btn-success" type="button" (click)="addOneItem()">
@@ -206,13 +184,14 @@
           <div class="form-group">
             <label for="especificacion">Especificacion</label>
             <textarea class="form-control" id="especificacion" aria-describedby="especificacionHelp"
-                      rows="3" formControlName="especificacion"></textarea>
+                      rows="3" formControlName="especificacion" [(ngModel)]="newItemAux.especificacion"
+            ></textarea>
             <small id="especificacionHelp" class="form-text text-muted">Detalle las instrucciones del pedido</small>
           </div>
           <!--For llevar-->
           <div class="form-check">
             <input id="llevar" type="checkbox" class="form-check-input" formControlName="llevar"
-                   aria-describedby="llevarHelp">
+                   aria-describedby="llevarHelp" [(ngModel)]="newItemAux.llevar">
             <label for="llevar" class="form-check-label">Llevar</label>
           </div>
           <button class="btn btn-primary button" type="submit">Agregar</button>
@@ -229,6 +208,55 @@
       <div *ngIf="newItemAux" class="modal-footer">
         <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
                 data-target="#productosModal">Volver
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal for preview pedido-->
+<div class="modal fade" id="prevPedidoModal" tabindex="-1" role="dialog" aria-labelledby="prevPedidoModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="prevPedidoModalLabel">Previsualizacion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="prevPedidoObj; else notprevPedidoObj" class="modal-body">
+        <h5>Total: {{prevPedidoObj.total}}</h5>
+        <p><em>Gire la pantalla para ver el detalle completo.</em></p>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Especificacion</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Subtotal</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let prevItem of prevPedidoObj.items">
+            <td>{{prevItem.nombre}}</td>
+            <td>{{prevItem.cantidad}}</td>
+            <td>{{prevItem.especificacion}}</td>
+            <td>{{prevItem.precio}}</td>
+            <td>{{prevItem.subtotal}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #notprevPedidoObj class="modal-body">
+        <h3>No existe un pedido para visualizar</h3>
+      </ng-template>
+
+      <div *ngIf="prevPedidoObj" class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal" (click)="sendPedido()">Confirmar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Salir
         </button>
       </div>
     </div>

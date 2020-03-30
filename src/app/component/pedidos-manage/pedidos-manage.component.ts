@@ -56,27 +56,25 @@ export class PedidosManageComponent implements OnInit {
   }
 
   addItem(data) {
-    // console.log(data);
+    // console.log('addItem ', data);
 
     if (this.newItemAux.cantidad > 0) {
-      this.newItemAux.llevar = data.llevar;
-      this.newItemAux.especificacion = data.especificacion;
+      // this.newItemAux.llevar = data.llevar;
+      // if (data.especificacion != null) {
+      //   this.newItemAux.especificacion = data.especificacion;
+      // } else {
+      //   this.newItemAux.especificacion = '';
+      // }
       if (this.editIndex != null) {
         this.items[this.editIndex] = this.newItemAux;
       } else {
         this.items.push(this.newItemAux);
       }
       this.editIndex = null;
-      this.itemsForm.reset();
+      // this.itemsForm.reset();
     }
     this.newItemAux = null;
   }
-
-  // itemValueChanged(data) {
-  //   this.newItemAux.cantidad = data.target.value;
-  // fpr thtml
-  // (change)="itemValueChanged($event)"
-  // }
 
   addOneItem() {
     this.newItemAux.cantidad += 1;
@@ -86,7 +84,6 @@ export class PedidosManageComponent implements OnInit {
     if (this.newItemAux.cantidad > 0) {
       this.newItemAux.cantidad -= 1;
     }
-
   }
 
 
@@ -104,10 +101,18 @@ export class PedidosManageComponent implements OnInit {
     this.currentMesa = this.mesas[mesaValue.target.value];
   }
 
+
+  deletePedido() {
+    this.pedido.items = [];
+    this.items = [];
+    this.prevPedidoObj = null;
+  }
+
   prevPedido() {
     if (this.items.length > 0 && this.currentMesa != null) {
       this.pedido.mesa = this.currentMesa;
       this.pedido.items = this.items;
+      console.log(this.pedido);
       this.pedidosHandlerService.postPrevPedido(this.pedido)
         .subscribe(data => {
             console.log('final ', data);
@@ -116,7 +121,24 @@ export class PedidosManageComponent implements OnInit {
           error => {
             console.log(error);
           }
-    );
+        );
+    } else {
+      console.log('Pedido vacio');
+    }
+  }
+
+  sendPedido() {
+    if (this.items.length > 0 && this.currentMesa != null) {
+      this.pedido.mesa = this.currentMesa;
+      this.pedido.items = this.items;
+      this.pedidosHandlerService.postPedido(this.pedido)
+        .subscribe(data => {
+            console.log('sendPedido ', data);
+          },
+          error => {
+            console.log(error);
+          }
+        );
     } else {
       console.log('Pedido vacio');
     }

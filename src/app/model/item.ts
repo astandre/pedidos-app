@@ -12,6 +12,8 @@ export class Item {
   constructor() {
     this.llevar = false;
     this.cantidad = 0;
+    this.especificacion = '';
+
   }
 
   toJson() {

@@ -88,4 +88,10 @@ export class PedidosHandlerService {
       return auxPedido;
     }));
   }
+
+  postPedido(pedido: Pedido): Observable<Pedido> {
+    console.log('json ', pedido.toJson());
+    const url = `${this.baseURL}/api/pedido/nuevo`;
+    return this.http.post<Pedido>(url, pedido.toJson(), httpOptions);
+  }
 }
