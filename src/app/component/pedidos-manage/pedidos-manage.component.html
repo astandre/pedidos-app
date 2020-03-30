@@ -54,12 +54,10 @@
         </tr>
 
         <ng-template #itemsTable>
-          <tr *ngFor="let item of items; index as i">
-            <td *ngIf="item.llevar; else itemllevar" class="table-warning">{{item.producto.nombre}}</td>
-            <ng-template #itemllevar>
-              <td><p>{{item.producto.nombre}}</p></td>
-            </ng-template>
+          <tr *ngFor="let item of items; index as i" [ngClass]="{'table-warning': item.llevar}">
+            <td>{{item.producto.nombre}}</td>
             <td><p>{{item.cantidad}}</p></td>
+            <!--For editar-->
             <td>
               <button type="button" class="btn btn-warning" data-target="#itemsModal" data-toggle="modal"
                       (click)="editItem(i)">
@@ -71,6 +69,7 @@
                 </svg>
               </button>
             </td>
+            <!--For delete -->
             <td>
               <button type="button" class="btn btn-danger" (click)="deleteItem(i)">
                 <svg class="bi bi-backspace-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
