@@ -6,6 +6,7 @@ import {Producto} from '../../model/producto';
 import {Item} from '../../model/item';
 import {Pedido} from '../../model/pedido';
 import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-pedidos-manage',
@@ -25,7 +26,7 @@ export class PedidosManageComponent implements OnInit {
   prevPedidoObj: Pedido;
 
 
-  constructor(private pedidosHandlerService: PedidosHandlerService, private formBuilder: FormBuilder) {
+  constructor(private pedidosHandlerService: PedidosHandlerService, private formBuilder: FormBuilder, private router: Router) {
     this.pedidosHandlerService.getAllProductos().subscribe(data => {
         // console.log(data);
         this.categorias = data;
@@ -134,6 +135,7 @@ export class PedidosManageComponent implements OnInit {
       this.pedidosHandlerService.postPedido(this.pedido)
         .subscribe(data => {
             console.log('sendPedido ', data);
+            this.router.navigate(['/pedidos']);
           },
           error => {
             console.log(error);

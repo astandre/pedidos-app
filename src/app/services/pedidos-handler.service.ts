@@ -94,4 +94,24 @@ export class PedidosHandlerService {
     const url = `${this.baseURL}/api/pedido/nuevo`;
     return this.http.post<Pedido>(url, pedido.toJson(), httpOptions);
   }
+
+  getAllPedidos(): Observable<Pedido[]> {
+    const url = `${this.baseURL}/api/pedido/preparando`;
+    return this.http.get(url, httpOptions).pipe(map(res => {
+        console.log(res);
+        // return [new Pedido()];
+        return res['pedidos'].map(item => {
+          const pedidoAux = new Pedido();
+          pedidoAux.mesa_str = item.mesa__mesa;
+          pedidoAux.codigo = item.codigo;
+          pedidoAux.id_pedido = item.id_pedido;
+          pedidoAux.estado = item.estado;
+          pedidoAux.llevar = item.llevar;
+          pedidoAux.fecha = new Date(item.fecha);
+          return pedidoAux;
+
+        });
+      }
+    ));
+  }
 }

@@ -6,17 +6,19 @@ import {PedidosManageComponent} from './component/pedidos-manage/pedidos-manage.
 import {HttpClientModule} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
+import {PedidosListComponent} from './component/pedidos-list/pedidos-list.component';
 
 const appRoutes: Routes = [
   {path: 'pedido', component: PedidosManageComponent},
-  // {path: 'train', component: UnclassifiedSentencesComponent},
+  {path: 'pedidos', component: PedidosListComponent},
 ];
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PedidosManageComponent
+    PedidosManageComponent,
+    PedidosListComponent
   ],
   imports: [
     BrowserModule,

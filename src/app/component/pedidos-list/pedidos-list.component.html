@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row" *ngIf="pedidos.length == 0; else pedidosList">
+    <div class="col-md-12">
+      <p>No hay pedidos por el momento!</p>
+      <button type="button" class="btn btn-danger" (click)="nuevoPedido()">Nuevo pedido</button>
+    </div>
+  </div>
+  <ng-template #pedidosList>
+    <div class="row">
+      <div *ngFor="let pedido of pedidos" class="col-md-4">
+        <div class="card" [ngClass]="{'border-warning ': pedido.llevar}">
+          <div class="card-body">
+            <h5 class="card-title">#{{pedido.codigo}} ({{pedido.mesa_str}})</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Estado: {{pedido.estado}}</li>
+              <li class="list-group-item">Hora: {{pedido.fecha.getHours()}}:{{pedido.fecha.getMinutes()}}</li>
+            </ul>
+
+          </div>
+          <div class="card-footer">
+            <button type="button" class="btn btn-primary" (click)="verDetallePedido(pedido.id_pedido)">Ver</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+</div>
