@@ -6,7 +6,7 @@ import {Producto} from '../../model/producto';
 import {Item} from '../../model/item';
 import {Pedido} from '../../model/pedido';
 import {FormBuilder} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-pedidos-manage',
@@ -22,11 +22,13 @@ export class PedidosManageComponent implements OnInit {
   itemsForm;
   editIndex: number;
   pedido: Pedido;
-  currentMesa: Mesa;
   prevPedidoObj: Pedido;
+  idPedido: number;
 
 
-  constructor(private pedidosHandlerService: PedidosHandlerService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(private pedidosHandlerService: PedidosHandlerService,
+              private formBuilder: FormBuilder, private router: Router,
+              private route: ActivatedRoute) {
     this.pedidosHandlerService.getAllProductos().subscribe(data => {
         // console.log(data);
         this.categorias = data;
@@ -99,7 +101,7 @@ export class PedidosManageComponent implements OnInit {
 
 
   changeMesa(mesaValue) {
-    this.currentMesa = this.mesas[mesaValue.target.value];
+    this.pedido.mesa = this.mesas[mesaValue.target.value];
   }
 
 
@@ -110,8 +112,8 @@ export class PedidosManageComponent implements OnInit {
   }
 
   prevPedido() {
-    if (this.items.length > 0 && this.currentMesa != null) {
-      this.pedido.mesa = this.currentMesa;
+    if (this.items.length > 0 && this.pedido.mesa != null) {
+      // this.pedido.mesa = this.currentMesa;
       this.pedido.items = this.items;
       console.log(this.pedido);
       this.pedidosHandlerService.postPrevPedido(this.pedido)
@@ -129,8 +131,8 @@ export class PedidosManageComponent implements OnInit {
   }
 
   sendPedido() {
-    if (this.items.length > 0 && this.currentMesa != null) {
-      this.pedido.mesa = this.currentMesa;
+    if (this.items.length > 0 && this.pedido.mesa != null) {
+      // this.pedido.mesa = this.currentMesa;
       this.pedido.items = this.items;
       this.pedidosHandlerService.postPedido(this.pedido)
         .subscribe(data => {
@@ -146,7 +148,40 @@ export class PedidosManageComponent implements OnInit {
     }
   }
 
+  getPedidoObj(idPedido) {
+    console.log('Get pedido', idPedido);
+  }
+
+  getMesafromId(idMesa) {
+    for (const mesaIter of this.mesas) {
+      if (mesaIter['id_mesa'] === idMesa) {
+        return mesaIter;
+      }
+    }
+  }
+
   ngOnInit() {
+
+    this.route.paramMap.subscribe(params => {
+      this.idPedido = +params.get('idPedido');
+      console.log(this.idPedido);
+      if (this.idPedido !== 0) {
+        this.getPedidoObj(this.idPedido);
+
+        this.pedidosHandlerService.getPedido(this.idPedido).subscribe(data => {
+            console.log(data);
+            this.pedido = data;
+            this.pedido.mesa = this.getMesafromId(this.pedido.mesa);
+            console.log(this.pedido);
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      } else {
+        console.log('Setting new pedido');
+      }
+    });
   }
 
 }

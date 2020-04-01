@@ -4,12 +4,13 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {PedidosManageComponent} from './component/pedidos-manage/pedidos-manage.component';
 import {HttpClientModule} from '@angular/common/http';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
 import {PedidosListComponent} from './component/pedidos-list/pedidos-list.component';
 
 const appRoutes: Routes = [
   {path: 'pedido', component: PedidosManageComponent},
+  {path: 'pedido/:idPedido', component: PedidosManageComponent},
   {path: 'pedidos', component: PedidosListComponent},
 ];
 
@@ -24,9 +25,10 @@ const appRoutes: Routes = [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes,
-      {enableTracing: true} // <-- debugging purposes only
+      {enableTracing: false} // <-- debugging purposes only
     )
   ],
   providers: [],

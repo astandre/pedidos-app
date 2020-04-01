@@ -114,4 +114,52 @@ export class PedidosHandlerService {
       }
     ));
   }
+
+  getPedido(idPedido: number): Observable<Pedido> {
+    const url = `${this.baseURL}/api/pedido/${idPedido}`;
+    return this.http.get<Pedido>(url, httpOptions).pipe(map(res => {
+        console.log(res);
+        const items: Array<Item> = [];
+        const auxPedido = new Pedido();
+        auxPedido.id_pedido = res['pedido'].id_pedido;
+        // auxPedido.mesa = new Mesa(res.mesa, '', '');
+        auxPedido.mesa = res['pedido'].mesa;
+        auxPedido.codigo = res['pedido'].codigo;
+        auxPedido.llevar = res['pedido'].llevar;
+        auxPedido.fecha = res['pedido'].fecha;
+        auxPedido.estado = res['pedido'].estado;
+        auxPedido.total = res['pedido'].total;
+        auxPedido.items = items;
+        return auxPedido;
+      }
+    ));
+
+    /*
+    pedido: {
+id_pedido: 12,
+mesa: 1,
+codigo: 11,
+llevar: false,
+fecha: "2020-03-31T15:45:58.126",
+estado: "P",
+total: "2.50",
+items: [
+{
+producto: 66,
+cantidad: 1,
+especificacion: null,
+llevar: false,
+precio: "1.25"
+},
+{
+producto: 66,
+cantidad: 1,
+especificacion: null,
+llevar: false,
+precio: "1.25"
+}
+]
+}
+     */
+  }
 }

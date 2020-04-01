@@ -23,7 +23,7 @@ export class PedidosListComponent implements OnInit {
   }
 
   verDetallePedido(idPedido) {
-    console.log(idPedido);
+    this.router.navigate(['/pedido', idPedido]);
   }
 
   nuevoPedido() {

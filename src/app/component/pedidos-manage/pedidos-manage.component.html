@@ -10,9 +10,8 @@
         <div class="input-group-prepend">
           <label class="input-group-text" for="mesaOptions">Mesas:</label>
         </div>
-        <select class="custom-select" id="mesaOptions" (change)="changeMesa($event)">
-          <option>Seleccionar..</option>
-          <option *ngFor="let mesa of mesas; index as i" value="{{i}}">{{mesa.mesa}}</option>
+        <select class="custom-select" id="mesaOptions" [(ngModel)]="pedido.mesa">
+          <option *ngFor="let mesa of mesas; index as i" [ngValue]="mesa">{{mesa.mesa}}</option>
         </select>
       </div>
     </div>
@@ -144,7 +143,7 @@
       </div>
       <div *ngIf="newItemAux;  else newItemContinue" class="modal-body">
         <p><em>{{newItemAux.producto.descripcion}}</em></p>
-        <form [formGroup]="itemsForm" (ngSubmit)="addItem(itemsForm.value)" #itemForm="ngForm">
+        <form [formGroup]="itemsForm" (ngSubmit)="addItem(itemsForm.value)">
           <!--For cantidad-->
           <label for="cantidad">Cantidad</label>
           <div class="input-group">
@@ -241,7 +240,7 @@
       </div>
 
       <ng-template #notprevPedidoObj class="modal-body">
-        <h3>No existe un pedido para visualizar</h3>
+        <h3>Pedido incompleto para visualizar, recuerda agregar items al pedido y seleccionar la mesa.</h3>
       </ng-template>
 
       <div *ngIf="prevPedidoObj" class="modal-footer">
