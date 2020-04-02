@@ -2,9 +2,11 @@ import {Producto} from './producto';
 
 export class Item {
   producto: Producto;
+  id_producto: string;
+  mesa_str: string;
   nombre: string;
   cantidad: number;
-  subtotal: number;
+  private _subtotal: number;
   precio: number;
   especificacion: string;
   llevar: boolean;
@@ -16,21 +18,17 @@ export class Item {
 
   }
 
-  toJson() {
-    if (this.especificacion.length > 0) {
-      return {
-        id_producto: this.producto.id_producto,
-        cantidad: this.cantidad,
-        especificacion: this.especificacion,
-        llevar: this.llevar
-      };
-    } else {
-      return {
-        id_producto: this.producto.id_producto,
-        cantidad: this.cantidad,
-        llevar: this.llevar
-      };
-    }
 
+  get subtotal(): number {
+    return this.producto.precio * this.cantidad;
+  }
+
+  toJson() {
+    return {
+      id_producto: this.producto.id_producto,
+      cantidad: this.cantidad,
+      especificacion: this.especificacion,
+      llevar: this.llevar
+    };
   }
 }

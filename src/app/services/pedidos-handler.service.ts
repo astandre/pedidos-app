@@ -66,28 +66,6 @@ export class PedidosHandlerService {
 
   }
 
-  postPrevPedido(pedido: Pedido): Observable<Pedido> {
-    console.log('json ', pedido.toJson());
-    const url = `${this.baseURL}/api/pedido/resumen`;
-    return this.http.post<Pedido>(url, pedido.toJson(), httpOptions).pipe(map(res => {
-      // console.log(res);
-      const localProductos = res['productos'].map(itemProd => {
-        const auxItem = new Item();
-        auxItem.nombre = itemProd.nombre;
-        auxItem.precio = itemProd.precio;
-        auxItem.cantidad = itemProd.cantidad;
-        auxItem.subtotal = itemProd.subtotal;
-        if ('especificacion' in itemProd) {
-          auxItem.especificacion = itemProd.especificacion;
-        }
-        return auxItem;
-      });
-      const auxPedido = new Pedido();
-      auxPedido.total = res.total;
-      auxPedido.items = localProductos;
-      return auxPedido;
-    }));
-  }
 
   postPedido(pedido: Pedido): Observable<Pedido> {
     console.log('json ', pedido.toJson());
@@ -118,12 +96,23 @@ export class PedidosHandlerService {
   getPedido(idPedido: number): Observable<Pedido> {
     const url = `${this.baseURL}/api/pedido/${idPedido}`;
     return this.http.get<Pedido>(url, httpOptions).pipe(map(res => {
-        console.log(res);
-        const items: Array<Item> = [];
+        // console.log(res);
+        // const items: Array<Item> = [];
+        const items = res['pedido']['items'].map(itemProd => {
+          const auxItem = new Item();
+          auxItem.id_producto = itemProd.producto;
+          auxItem.nombre = itemProd.nombre;
+          auxItem.precio = itemProd.precio;
+          auxItem.cantidad = itemProd.cantidad;
+          auxItem.subtotal = itemProd.subtotal;
+          if ('especificacion' in itemProd) {
+            auxItem.especificacion = itemProd.especificacion;
+          }
+          return auxItem;
+        });
         const auxPedido = new Pedido();
         auxPedido.id_pedido = res['pedido'].id_pedido;
-        // auxPedido.mesa = new Mesa(res.mesa, '', '');
-        auxPedido.mesa = res['pedido'].mesa;
+        auxPedido.id_mesa = res['pedido'].mesa;
         auxPedido.codigo = res['pedido'].codigo;
         auxPedido.llevar = res['pedido'].llevar;
         auxPedido.fecha = res['pedido'].fecha;
@@ -133,33 +122,5 @@ export class PedidosHandlerService {
         return auxPedido;
       }
     ));
-
-    /*
-    pedido: {
-id_pedido: 12,
-mesa: 1,
-codigo: 11,
-llevar: false,
-fecha: "2020-03-31T15:45:58.126",
-estado: "P",
-total: "2.50",
-items: [
-{
-producto: 66,
-cantidad: 1,
-especificacion: null,
-llevar: false,
-precio: "1.25"
-},
-{
-producto: 66,
-cantidad: 1,
-especificacion: null,
-llevar: false,
-precio: "1.25"
-}
-]
-}
-     */
   }
 }

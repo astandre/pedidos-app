@@ -7,6 +7,7 @@ import {Item} from '../../model/item';
 import {Pedido} from '../../model/pedido';
 import {FormBuilder} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-pedidos-manage',
@@ -17,32 +18,17 @@ export class PedidosManageComponent implements OnInit {
 
   categorias: Array<Categoria>;
   mesas: Array<Mesa>;
-  items: Array<Item> = [];
   newItemAux: Item;
   itemsForm;
+  llevarPedidoForm;
   editIndex: number;
   pedido: Pedido;
   prevPedidoObj: Pedido;
-  idPedido: number;
 
 
   constructor(private pedidosHandlerService: PedidosHandlerService,
               private formBuilder: FormBuilder, private router: Router,
               private route: ActivatedRoute) {
-    this.pedidosHandlerService.getAllProductos().subscribe(data => {
-        // console.log(data);
-        this.categorias = data;
-      },
-      error => {
-        console.log(error);
-      });
-    this.pedidosHandlerService.getAllMesas().subscribe(data => {
-        // console.log(data);
-        this.mesas = data;
-      },
-      error => {
-        console.log(error);
-      });
 
     this.editIndex = null;
     this.pedido = new Pedido();
@@ -51,27 +37,27 @@ export class PedidosManageComponent implements OnInit {
       especificacion: '',
       llevar: false,
     });
+    this.llevarPedidoForm = this.formBuilder.group({
+      llevar: false,
+    });
   }
 
   newItem(newItem: Producto) {
     this.newItemAux = new Item();
     this.newItemAux.producto = newItem;
+    if (this.pedido.llevar) {
+      this.newItemAux.llevar = true;
+    }
   }
 
   addItem(data) {
     // console.log('addItem ', data);
 
     if (this.newItemAux.cantidad > 0) {
-      // this.newItemAux.llevar = data.llevar;
-      // if (data.especificacion != null) {
-      //   this.newItemAux.especificacion = data.especificacion;
-      // } else {
-      //   this.newItemAux.especificacion = '';
-      // }
       if (this.editIndex != null) {
-        this.items[this.editIndex] = this.newItemAux;
+        this.pedido.items[this.editIndex] = this.newItemAux;
       } else {
-        this.items.push(this.newItemAux);
+        this.pedido.items.push(this.newItemAux);
       }
       this.editIndex = null;
       // this.itemsForm.reset();
@@ -91,49 +77,32 @@ export class PedidosManageComponent implements OnInit {
 
 
   deleteItem(index: number) {
-    this.items.splice(index, 1);
+    this.pedido.items.splice(index, 1);
   }
 
   editItem(index: number) {
-    this.newItemAux = this.items[index];
+    this.newItemAux = this.pedido.items[index];
     this.editIndex = index;
-  }
-
-
-  changeMesa(mesaValue) {
-    this.pedido.mesa = this.mesas[mesaValue.target.value];
   }
 
 
   deletePedido() {
     this.pedido.items = [];
-    this.items = [];
     this.prevPedidoObj = null;
   }
 
-  prevPedido() {
-    if (this.items.length > 0 && this.pedido.mesa != null) {
-      // this.pedido.mesa = this.currentMesa;
-      this.pedido.items = this.items;
-      console.log(this.pedido);
-      this.pedidosHandlerService.postPrevPedido(this.pedido)
-        .subscribe(data => {
-            console.log('final ', data);
-            this.prevPedidoObj = data;
-          },
-          error => {
-            console.log(error);
-          }
-        );
-    } else {
-      console.log('Pedido vacio');
-    }
-  }
-
   sendPedido() {
-    if (this.items.length > 0 && this.pedido.mesa != null) {
+    let sendOk = false;
+    if (this.pedido.items.length > 0) {
+      if (this.pedido.llevar) {
+        sendOk = true;
+      } else if (this.pedido.mesa != null) {
+        sendOk = true;
+      }
+    }
+    if (sendOk) {
       // this.pedido.mesa = this.currentMesa;
-      this.pedido.items = this.items;
+      // this.pedido.items = this.items;
       this.pedidosHandlerService.postPedido(this.pedido)
         .subscribe(data => {
             console.log('sendPedido ', data);
@@ -148,11 +117,7 @@ export class PedidosManageComponent implements OnInit {
     }
   }
 
-  getPedidoObj(idPedido) {
-    console.log('Get pedido', idPedido);
-  }
-
-  getMesafromId(idMesa) {
+  findMesa(idMesa) {
     for (const mesaIter of this.mesas) {
       if (mesaIter['id_mesa'] === idMesa) {
         return mesaIter;
@@ -160,26 +125,60 @@ export class PedidosManageComponent implements OnInit {
     }
   }
 
+  findProd(idProd) {
+    for (const catIter of this.categorias) {
+      for (const prodIter of catIter.productos) {
+        // console.log('curretItem ', itemIter);
+        // console.log('prod  ', prodIter);
+        if (prodIter['id_producto'] === idProd) {
+          return prodIter;
+        }
+      }
+    }
+  }
+
+  getInitialData() {
+    return forkJoin([
+      this.pedidosHandlerService.getAllProductos(),
+      this.pedidosHandlerService.getAllMesas()
+    ]);
+  }
+
   ngOnInit() {
-
+    // Getting data for pedido edit
     this.route.paramMap.subscribe(params => {
-      this.idPedido = +params.get('idPedido');
-      console.log(this.idPedido);
-      if (this.idPedido !== 0) {
-        this.getPedidoObj(this.idPedido);
+      const idPedido = +params.get('idPedido');
+      if (idPedido !== 0) {
+        // console.log('Get pedido', idPedido);
+        this.getInitialData().subscribe(data => {
+          console.log(data);
+          this.categorias = data[0];
+          this.mesas = data[1];
+          this.pedidosHandlerService.getPedido(idPedido).subscribe(pedidoData => {
+              // console.log('raw pedido', data);
+              this.pedido = pedidoData;
+              // Finding mesa OBJ
+              this.pedido.mesa = this.findMesa(this.pedido.id_mesa);
+              // Finding items OBJ
+              for (const itemIter of this.pedido.items) {
+                itemIter.producto = this.findProd(itemIter.id_producto);
+              }
+              console.log('final pedido', this.pedido);
+            },
+            error => {
+              console.log(error);
+            }
+          );
+        });
 
-        this.pedidosHandlerService.getPedido(this.idPedido).subscribe(data => {
-            console.log(data);
-            this.pedido = data;
-            this.pedido.mesa = this.getMesafromId(this.pedido.mesa);
-            console.log(this.pedido);
-          },
-          error => {
-            console.log(error);
-          }
-        );
       } else {
         console.log('Setting new pedido');
+        this.getInitialData().subscribe(data => {
+          // console.log(data);
+          this.categorias = data[0];
+          this.mesas = data[1];
+        });
+
       }
     });
   }
