@@ -25,11 +25,16 @@ export class Pedido {
     for (const entry of this.items) {
       final_items.push(entry.toJson());
     }
+    const auxJSON = {
+      items: final_items, llevar: this.llevar
+    };
     if (this.id_pedido != null) {
-      return {id_pedido: this.id_pedido, mesa: this.mesa.id_mesa, items: final_items, llevar: this.llevar};
-    } else {
-      return {mesa: this.mesa.id_mesa, items: final_items, llevar: this.llevar};
+      auxJSON['id_pedido'] = this.id_pedido;
     }
+    if (this.mesa != null) {
+      auxJSON['mesa'] = this.mesa.id_mesa;
+    }
+    return auxJSON;
   }
 
 

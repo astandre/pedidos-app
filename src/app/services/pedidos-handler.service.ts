@@ -73,6 +73,16 @@ export class PedidosHandlerService {
     return this.http.post<Pedido>(url, pedido.toJson(), httpOptions);
   }
 
+  postChangePedido(idPedido: number, estado: string): Observable<Pedido> {
+    const url = `${this.baseURL}/api/pedido/estado/${idPedido}/${estado}`;
+    return this.http.post<Pedido>(url, httpOptions);
+  }
+
+  deletePedido(idPedido: number): Observable<Pedido> {
+    const url = `${this.baseURL}/api/pedido/${idPedido}`;
+    return this.http.delete<Pedido>(url);
+  }
+
   getAllPedidos(): Observable<Pedido[]> {
     const url = `${this.baseURL}/api/pedido/preparando`;
     return this.http.get(url, httpOptions).pipe(map(res => {
@@ -104,7 +114,7 @@ export class PedidosHandlerService {
           auxItem.nombre = itemProd.nombre;
           auxItem.precio = itemProd.precio;
           auxItem.cantidad = itemProd.cantidad;
-          auxItem.subtotal = itemProd.subtotal;
+          // auxItem.subtotal = itemProd.subtotal;
           if ('especificacion' in itemProd) {
             auxItem.especificacion = itemProd.especificacion;
           }
@@ -112,7 +122,9 @@ export class PedidosHandlerService {
         });
         const auxPedido = new Pedido();
         auxPedido.id_pedido = res['pedido'].id_pedido;
-        auxPedido.id_mesa = res['pedido'].mesa;
+        if ('mesa' in res['pedido']) {
+          auxPedido.id_mesa = res['pedido'].mesa;
+        }
         auxPedido.codigo = res['pedido'].codigo;
         auxPedido.llevar = res['pedido'].llevar;
         auxPedido.fecha = res['pedido'].fecha;

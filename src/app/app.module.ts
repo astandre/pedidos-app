@@ -9,6 +9,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {PedidosListComponent} from './component/pedidos-list/pedidos-list.component';
 
 const appRoutes: Routes = [
+  // TODO redirect to pedidos
   {path: 'pedido', component: PedidosManageComponent},
   {path: 'pedido/:idPedido', component: PedidosManageComponent},
   {path: 'pedidos', component: PedidosListComponent},

@@ -30,6 +30,38 @@ export class PedidosListComponent implements OnInit {
     this.router.navigate(['/pedido']);
   }
 
+  finalizarPedido(idPedido) {
+    this.pedidosHandlerService.postChangePedido(idPedido, 'S').subscribe(data => {
+        // console.log(data);
+        console.log('Borrado');
+        for (const pedidoIter of this.pedidos) {
+          if (pedidoIter.id_pedido === idPedido) {
+            const index = this.pedidos.indexOf(pedidoIter, 0);
+            this.pedidos.splice(index, 1);
+          }
+        }
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  detelePedido(idPedido) {
+    this.pedidosHandlerService.deletePedido(idPedido).subscribe(data => {
+        // console.log(data);
+        console.log('Borrado');
+        for (const pedidoIter of this.pedidos) {
+          if (pedidoIter.id_pedido === idPedido) {
+            const index = this.pedidos.indexOf(pedidoIter, 0);
+            this.pedidos.splice(index, 1);
+          }
+        }
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
   ngOnInit() {
   }
 
