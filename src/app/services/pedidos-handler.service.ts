@@ -86,8 +86,7 @@ export class PedidosHandlerService {
   getAllPedidos(): Observable<Pedido[]> {
     const url = `${this.baseURL}/api/pedido/preparando`;
     return this.http.get(url, httpOptions).pipe(map(res => {
-        console.log(res);
-        // return [new Pedido()];
+        // console.log(res);
         return res['pedidos'].map(item => {
           const pedidoAux = new Pedido();
           pedidoAux.mesa_str = item.mesa__mesa;
@@ -103,18 +102,51 @@ export class PedidosHandlerService {
     ));
   }
 
+  getPedidosEstado(estado: string): Observable<Pedido[]> {
+    const url = `${this.baseURL}/api/pedido/estado/${estado}`;
+    return this.http.get(url, httpOptions).pipe(map(res => {
+        console.log(res);
+        return res['pedidos'].map(item => {
+
+          const items = item['items'].map(itemProd => {
+            const auxItem = new Item();
+            auxItem.nombre = itemProd.producto;
+            auxItem.precio = itemProd.precio;
+            auxItem.cantidad = itemProd.cantidad;
+            auxItem.llevar = itemProd.llevar;
+            if ('especificacion' in itemProd) {
+              auxItem.especificacion = itemProd.especificacion;
+            }
+            return auxItem;
+          });
+
+          const pedidoAux = new Pedido();
+          pedidoAux.codigo = item.codigo;
+          pedidoAux.id_pedido = item.id_pedido;
+          pedidoAux.estado = item.estado;
+          pedidoAux.llevar = item.llevar;
+          pedidoAux.items = items;
+          pedidoAux.mesa_str = item.mesa;
+          pedidoAux.fecha = new Date(item.fecha);
+
+          return pedidoAux;
+
+        });
+      }
+    ));
+  }
+
   getPedido(idPedido: number): Observable<Pedido> {
     const url = `${this.baseURL}/api/pedido/${idPedido}`;
     return this.http.get<Pedido>(url, httpOptions).pipe(map(res => {
         // console.log(res);
-        // const items: Array<Item> = [];
         const items = res['pedido']['items'].map(itemProd => {
           const auxItem = new Item();
           auxItem.id_producto = itemProd.producto;
           auxItem.nombre = itemProd.nombre;
           auxItem.precio = itemProd.precio;
           auxItem.cantidad = itemProd.cantidad;
-          // auxItem.subtotal = itemProd.subtotal;
+          auxItem.llevar = itemProd.llevar;
           if ('especificacion' in itemProd) {
             auxItem.especificacion = itemProd.especificacion;
           }

@@ -1,0 +1,88 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h5>Pedidos</h5>
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
+                (click)="displayPedidos()">
+          Pedidos
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
+                (click)="displayItems()">
+          Items
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div *ngIf="pedidos.length > 0; else emptyPedidos">
+    <div class="row" *ngIf="display">
+      <div *ngFor="let pedido of pedidos" class="col-md-4 col-sm-6 col-xs-12">
+        <div class="card table-responsive" [ngClass]="{'border-warning ': pedido.llevar}">
+          <div class="card-body">
+            <h5 class="card-title" *ngIf="pedido.llevar; else pedidoNotLlevar">
+              #{{pedido.codigo}} (Llevar)[{{ pedido.fecha | date :'shortTime'}}]</h5>
+            <ng-template #pedidoNotLlevar>
+              <h5 class="card-title">#{{pedido.codigo}}({{pedido.mesa_str}})[{{ pedido.fecha | date :'shortTime'}}]</h5>
+            </ng-template>
+            <table class="table">
+              <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Especificacion</th>
+
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of pedido.items;" [ngClass]="{'table-warning': item.llevar}">
+                <td>{{item.nombre}}</td>
+                <td>{{item.cantidad}}</td>
+                <td>{{item.especificacion}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <div class="form-inline">
+              <button type="button" class="btn btn-success" (click)="finalizarPedido(pedido.id_pedido)">Preparado
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="!display">
+      <div class="col-md-12">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Especificacion</th>
+            <th scope="col">Pedido</th>
+            <th scope="col">Mesa</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of itemsList;" [ngClass]="{'table-warning': item.llevar}">
+            <td>{{item.nombre}}</td>
+            <td>{{item.cantidad}}</td>
+            <td>{{item.especificacion}}</td>
+            <td>{{item.pedido}}</td>
+            <td>{{item.mesa_str}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyPedidos>
+    <div class="row">
+      <div class="col-md-12">
+        <h5>No existen pedidos por el momento</h5>
+      </div>
+    </div>
+  </ng-template>
+</div>

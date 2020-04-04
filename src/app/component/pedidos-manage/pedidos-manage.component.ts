@@ -151,7 +151,7 @@ export class PedidosManageComponent implements OnInit {
       if (idPedido !== 0) {
         // console.log('Get pedido', idPedido);
         this.getInitialData().subscribe(data => {
-          console.log(data);
+          // console.log(data);
           this.categorias = data[0];
           this.mesas = data[1];
           this.pedidosHandlerService.getPedido(idPedido).subscribe(pedidoData => {

@@ -195,8 +195,14 @@
           </div>
           <!--For llevar-->
           <div class="form-check">
-            <input id="llevar" type="checkbox" class="form-check-input" formControlName="llevar"
-                   aria-describedby="llevarHelp" [(ngModel)]="newItemAux.llevar">
+            <input *ngIf="pedido.llevar; else disableItemLlevar" id="llevar" type="checkbox" class="form-check-input"
+                   formControlName="llevar"
+                   aria-describedby="llevarHelp" [(ngModel)]="newItemAux.llevar" [attr.disabled]="true">
+            <ng-template #disableItemLlevar>
+              <input id="llevar" type="checkbox" class="form-check-input" formControlName="llevar"
+                     aria-describedby="llevarHelp" [(ngModel)]="newItemAux.llevar">
+            </ng-template>
+
             <label for="llevar" class="form-check-label">Llevar</label>
           </div>
           <button class="btn btn-primary button" type="submit">Agregar</button>
@@ -244,7 +250,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let prevItem of pedido.items">
+          <tr *ngFor="let prevItem of pedido.items" [ngClass]="{'table-warning': prevItem.llevar}">
             <td>{{prevItem.producto.nombre}}</td>
             <td>{{prevItem.cantidad}}</td>
             <td>{{prevItem.especificacion}}</td>

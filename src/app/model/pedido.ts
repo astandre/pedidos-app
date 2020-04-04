@@ -47,7 +47,8 @@ export class Pedido {
     for (const entry of this.items) {
       auxTotal += entry.subtotal;
     }
-    return auxTotal.toFixed(2);
+    // TODO make 2 decimals toFixed(2)
+    return auxTotal;
   }
 
   get estado(): string {

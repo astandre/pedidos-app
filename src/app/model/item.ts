@@ -3,6 +3,7 @@ import {Producto} from './producto';
 export class Item {
   producto: Producto;
   id_producto: string;
+  pedido: string;
   mesa_str: string;
   nombre: string;
   cantidad: number;

@@ -13,13 +13,6 @@ export class PedidosListComponent implements OnInit {
   pedidos: Array<Pedido> = [];
 
   constructor(private pedidosHandlerService: PedidosHandlerService, private router: Router) {
-    this.pedidosHandlerService.getAllPedidos().subscribe(data => {
-        // console.log(data);
-        this.pedidos = data;
-      },
-      error => {
-        console.log(error);
-      });
   }
 
   verDetallePedido(idPedido) {
@@ -33,7 +26,7 @@ export class PedidosListComponent implements OnInit {
   finalizarPedido(idPedido) {
     this.pedidosHandlerService.postChangePedido(idPedido, 'S').subscribe(data => {
         // console.log(data);
-        console.log('Borrado');
+        console.log('Entregado');
         for (const pedidoIter of this.pedidos) {
           if (pedidoIter.id_pedido === idPedido) {
             const index = this.pedidos.indexOf(pedidoIter, 0);
@@ -63,6 +56,13 @@ export class PedidosListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.pedidosHandlerService.getAllPedidos().subscribe(data => {
+        // console.log(data);
+        this.pedidos = data;
+      },
+      error => {
+        console.log(error);
+      });
   }
 
 }
