@@ -11,9 +11,9 @@
         <div class="card" [ngClass]="{'border-warning ': pedido.llevar}">
           <div class="card-body">
             <h5 class="card-title" *ngIf="pedido.llevar; else pedidoNotLlevar">
-              #{{pedido.codigo}} (Llevar)</h5>
+              #{{pedido.codigo | number:'3.0-0'}} (Llevar)</h5>
             <ng-template #pedidoNotLlevar>
-              <h5 class="card-title">#{{pedido.codigo}} ({{pedido.mesa_str}})</h5>
+              <h5 class="card-title">#{{pedido.codigo | number:'3.0-0'}} ({{pedido.mesa_str}})</h5>
             </ng-template>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">Estado: {{pedido.estado}}</li>

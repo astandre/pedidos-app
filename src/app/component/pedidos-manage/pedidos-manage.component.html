@@ -71,8 +71,8 @@
           <tr *ngFor="let item of pedido.items; index as i" [ngClass]="{'table-warning': item.llevar}">
             <td>{{item.producto.nombre}}</td>
             <td>{{item.cantidad}}</td>
-            <td class="d-none d-sm-table-cell">{{item.producto.precio}}</td>
-            <td class="d-none d-sm-table-cell">{{item.subtotal}}</td>
+            <td class="d-none d-sm-table-cell">{{item.producto.precio | currency}}</td>
+            <td class="d-none d-sm-table-cell">{{item.subtotal | currency}}</td>
             <td class="d-none d-sm-table-cell">{{item.especificacion}}</td>
             <!--For editar-->
             <td>
@@ -131,7 +131,7 @@
                 <button class="btn btn-success btn-lg btn-block" type="button"
                         (click)="newItem(producto)" data-target="#itemsModal"
                         data-dismiss="modal" data-toggle="modal">{{producto.nombre}}
-                  ({{producto.precio}})
+                  ({{producto.precio | currency}})
                 </button>
               </div>
             </div>
@@ -152,7 +152,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="itemsModalLabel" *ngIf="newItemAux">{{newItemAux.producto.nombre}}
-          ({{newItemAux.producto.precio}})</h5>
+          ({{newItemAux.producto.precio | currency}})</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -237,7 +237,7 @@
         </button>
       </div>
       <div *ngIf="pedido; else notprevPedidoObj" class="modal-body">
-        <h5>Total: {{pedido.total}}</h5>
+        <h5>Total: {{pedido.total | currency}}</h5>
         <p><em>Gire la pantalla para ver el detalle completo.</em></p>
         <table class="table">
           <thead>
@@ -254,8 +254,8 @@
             <td>{{prevItem.producto.nombre}}</td>
             <td>{{prevItem.cantidad}}</td>
             <td>{{prevItem.especificacion}}</td>
-            <td>{{prevItem.producto.precio}}</td>
-            <td>{{prevItem.subtotal}}</td>
+            <td>{{prevItem.producto.precio | currency}}</td>
+            <td>{{prevItem.subtotal | currency}}</td>
           </tr>
           </tbody>
         </table>
