@@ -7,6 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
 import {PedidosListComponent} from './component/pedidos-list/pedidos-list.component';
 import {CocinaListComponent} from './component/cocina-list/cocina-list.component';
+import {CajaManageComponent} from './component/caja-manage/caja-manage.component';
 
 const appRoutes: Routes = [
   // TODO redirect to pedidos
@@ -14,6 +15,7 @@ const appRoutes: Routes = [
   {path: 'pedido/:idPedido', component: PedidosManageComponent},
   {path: 'pedidos', component: PedidosListComponent},
   {path: 'cocina', component: CocinaListComponent},
+  {path: 'caja', component: CajaManageComponent},
 ];
 
 
@@ -22,7 +24,8 @@ const appRoutes: Routes = [
     AppComponent,
     PedidosManageComponent,
     PedidosListComponent,
-    CocinaListComponent
+    CocinaListComponent,
+    CajaManageComponent
   ],
   imports: [
     BrowserModule,

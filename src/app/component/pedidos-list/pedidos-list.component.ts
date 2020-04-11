@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PedidosHandlerService} from '../../services/pedidos-handler.service';
 import {Pedido} from '../../model/pedido';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-pedidos-list',
@@ -11,8 +11,10 @@ import {Router} from '@angular/router';
 export class PedidosListComponent implements OnInit {
 
   pedidos: Array<Pedido> = [];
+  mode: string;
 
-  constructor(private pedidosHandlerService: PedidosHandlerService, private router: Router) {
+  constructor(private pedidosHandlerService: PedidosHandlerService, private router: Router,
+              private route: ActivatedRoute) {
   }
 
   verDetallePedido(idPedido) {
@@ -23,20 +25,21 @@ export class PedidosListComponent implements OnInit {
     this.router.navigate(['/pedido']);
   }
 
-  finalizarPedido(idPedido) {
-    this.pedidosHandlerService.postChangePedido(idPedido, 'S').subscribe(data => {
-        // console.log(data);
-        console.log('Entregado');
-        for (const pedidoIter of this.pedidos) {
-          if (pedidoIter.id_pedido === idPedido) {
-            const index = this.pedidos.indexOf(pedidoIter, 0);
-            this.pedidos.splice(index, 1);
-          }
-        }
-      },
-      error => {
-        console.log(error);
-      });
+  finalizarPedido(currentPedido) {
+    console.log(currentPedido);
+    // this.pedidosHandlerService.postChangePedido(idPedido, 'S').subscribe(data => {
+    //     // console.log(data);
+    //     console.log('Entregado');
+    //     for (const pedidoIter of this.pedidos) {
+    //       if (pedidoIter.id_pedido === idPedido) {
+    //         const index = this.pedidos.indexOf(pedidoIter, 0);
+    //         this.pedidos.splice(index, 1);
+    //       }
+    //     }
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   });
   }
 
   detelePedido(idPedido) {
@@ -56,7 +59,7 @@ export class PedidosListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pedidosHandlerService.getAllPedidos().subscribe(data => {
+    this.pedidosHandlerService.getPedidosPrep().subscribe(data => {
         // console.log(data);
         this.pedidos = data;
       },

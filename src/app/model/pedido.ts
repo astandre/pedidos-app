@@ -54,8 +54,8 @@ export class Pedido {
   get estado(): string {
     const ESTADO_CHOICES = {
       P: 'PREPARANDO',
-      L: 'PREPARADO',
-      C: 'COMPLETO',
+      C: 'PREPARADO',
+      S: 'COMPLETO',
       G: 'PAGADO',
     };
 

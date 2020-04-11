@@ -106,7 +106,7 @@ export class PedidosManageComponent implements OnInit {
       this.pedidosHandlerService.postPedido(this.pedido)
         .subscribe(data => {
             console.log('sendPedido ', data);
-            this.router.navigate(['/pedidos']);
+            this.router.navigate(['pedidos']);
           },
           error => {
             console.log(error);
@@ -174,10 +174,13 @@ export class PedidosManageComponent implements OnInit {
       } else {
         console.log('Setting new pedido');
         this.getInitialData().subscribe(data => {
-          // console.log(data);
-          this.categorias = data[0];
-          this.mesas = data[1];
-        });
+            // console.log(data);
+            this.categorias = data[0];
+            this.mesas = data[1];
+          },
+          error => {
+            console.log(error);
+          });
 
       }
     });

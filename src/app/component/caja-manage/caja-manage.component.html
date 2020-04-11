@@ -1,0 +1,46 @@
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+        aria-expanded="false" aria-controls="collapseExample">
+  Button with data-target
+</button>
+<div class="collapse" id="collapseExample">
+  <div class="row">
+    <div class="col-md-3" *ngFor="let pedido of pedidos">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            #{{pedido.codigo | number:'3.0-0'}} </h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngIf="pedido.llevar; else pedidoNotLlevar">Llevar</li>
+            <li class="list-group-item">{{pedido.estado}}</li>
+            <li class="list-group-item">{{ pedido.fecha | date :'shortTime'}}</li>
+          </ul>
+          <ng-template #pedidoNotLlevar>
+            <li class="list-group-item">({{pedido.mesa_str}})</li>
+          </ng-template>
+        </div>
+        <div class="card-footer">
+          <div class="form-inline">
+            <button type="button" class="btn btn-primary">Ver
+            </button>
+            <button type="button" class="btn btn-danger">Cancelar
+            </button>
+            <button type="button" class="btn btn-success">Entregado
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+
+
+    </div>
+  </div>
+
+</div>
+
+

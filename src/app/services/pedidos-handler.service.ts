@@ -6,7 +6,6 @@ import {Producto} from '../model/producto';
 import {Categoria} from '../model/categoria';
 import {Mesa} from '../model/mesa';
 import {Pedido} from '../model/pedido';
-import {ConfigService} from './config.service';
 import {Item} from '../model/item';
 
 
@@ -21,10 +20,8 @@ const httpOptions = {
 })
 export class PedidosHandlerService {
   baseURL = 'http://127.0.0.1:8000';
-  configService;
 
-  constructor(private http: HttpClient, configService: ConfigService) {
-    this.configService = configService;
+  constructor(private http: HttpClient) {
   }
 
   getAllProductos(): Observable<Categoria[]> {
@@ -83,7 +80,7 @@ export class PedidosHandlerService {
     return this.http.delete<Pedido>(url);
   }
 
-  getAllPedidos(): Observable<Pedido[]> {
+  getPedidosPrep(): Observable<Pedido[]> {
     const url = `${this.baseURL}/api/pedido/preparando`;
     return this.http.get(url, httpOptions).pipe(map(res => {
         // console.log(res);
@@ -105,9 +102,8 @@ export class PedidosHandlerService {
   getPedidosEstado(estado: string): Observable<Pedido[]> {
     const url = `${this.baseURL}/api/pedido/estado/${estado}`;
     return this.http.get(url, httpOptions).pipe(map(res => {
-        console.log(res);
+        // console.log(res);
         return res['pedidos'].map(item => {
-
           const items = item['items'].map(itemProd => {
             const auxItem = new Item();
             auxItem.nombre = itemProd.producto;

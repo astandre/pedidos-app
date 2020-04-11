@@ -23,10 +23,15 @@
           </div>
           <div class="card-footer">
             <div class="form-inline">
-              <button type="button" class="btn btn-primary" (click)="verDetallePedido(pedido.id_pedido)">Ver</button>
-              <button type="button" class="btn btn-danger" (click)="detelePedido(pedido.id_pedido)">Cancelar
+              <button type="button" class="btn btn-primary"
+                      (click)="verDetallePedido(pedido.id_pedido)">Ver
               </button>
-              <button type="button" class="btn btn-success" (click)="finalizarPedido(pedido.id_pedido)">Entregado
+              <button type="button" class="btn btn-danger"
+                      [disabled]="pedido.estado === 'PREPARADO' || pedido.estado === 'COMPLETO'"
+                      (click)="detelePedido(pedido.id_pedido)">Cancelar
+              </button>
+              <button type="button" class="btn btn-success" [disabled]="pedido.estado !== 'PREPARADO'"
+                      (click)="finalizarPedido(pedido)">Entregado
               </button>
             </div>
           </div>
