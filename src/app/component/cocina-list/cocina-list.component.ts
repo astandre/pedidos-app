@@ -30,9 +30,16 @@ export class CocinaListComponent implements OnInit {
     this.pedidosHandlerService.postChangePedido(idPedido, 'C').subscribe(data => {
         // console.log(data);
         console.log('Entregado');
+        console.log(this.itemsList);
         for (const pedidoIter of this.pedidos) {
           if (pedidoIter.id_pedido === idPedido) {
             const index = this.pedidos.indexOf(pedidoIter, 0);
+            this.pedidos.splice(index, 1);
+          }
+        }
+        for (const itemAux of this.itemsList) {
+          if (itemAux.pedido === idPedido) {
+            const index = this.itemsList.indexOf(itemAux, 0);
             this.pedidos.splice(index, 1);
           }
         }

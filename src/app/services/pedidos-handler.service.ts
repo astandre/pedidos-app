@@ -110,8 +110,12 @@ export class PedidosHandlerService {
             auxItem.precio = itemProd.precio;
             auxItem.cantidad = itemProd.cantidad;
             auxItem.llevar = itemProd.llevar;
+            auxItem.id_pedido = item.id_pedido;
             if ('especificacion' in itemProd) {
               auxItem.especificacion = itemProd.especificacion;
+            }
+            if ('id_item' in itemProd) {
+              auxItem.id_item = itemProd.id_item;
             }
             return auxItem;
           });

@@ -47,7 +47,6 @@ export class Pedido {
     for (const entry of this.items) {
       auxTotal += entry.subtotal;
     }
-    // TODO make 2 decimals toFixed(2)
     return auxTotal;
   }
 
@@ -55,7 +54,7 @@ export class Pedido {
     const ESTADO_CHOICES = {
       P: 'PREPARANDO',
       C: 'PREPARADO',
-      S: 'COMPLETO',
+      S: 'SERVIDO',
       G: 'PAGADO',
     };
 

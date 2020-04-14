@@ -1,42 +1,162 @@
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
-        aria-expanded="false" aria-controls="collapseExample">
-  Button with data-target
-</button>
-<div class="collapse" id="collapseExample">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-3" *ngFor="let pedido of pedidos">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">
-            #{{pedido.codigo | number:'3.0-0'}} </h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item" *ngIf="pedido.llevar; else pedidoNotLlevar">Llevar</li>
-            <li class="list-group-item">{{pedido.estado}}</li>
-            <li class="list-group-item">{{ pedido.fecha | date :'shortTime'}}</li>
-          </ul>
-          <ng-template #pedidoNotLlevar>
-            <li class="list-group-item">({{pedido.mesa_str}})</li>
-          </ng-template>
-        </div>
-        <div class="card-footer">
-          <div class="form-inline">
-            <button type="button" class="btn btn-primary">Ver
-            </button>
-            <button type="button" class="btn btn-danger">Cancelar
-            </button>
-            <button type="button" class="btn btn-success">Entregado
-            </button>
+    <div class="col-md-12">
+      <div class="collapse" id="pedidosCollapse">
+        <div class="row">
+          <div class="col-md-3" *ngFor="let pedido of pedidos">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  #{{pedido.codigo | number:'3.0-0'}} </h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item" *ngIf="pedido.llevar; else pedidoNotLlevar">Llevar</li>
+                  <li class="list-group-item">{{pedido.estado}}</li>
+                  <li class="list-group-item">{{ pedido.fecha | date :'shortTime'}}</li>
+                </ul>
+                <ng-template #pedidoNotLlevar>
+                  <li class="list-group-item">({{pedido.mesa_str}})</li>
+                </ng-template>
+              </div>
+              <div class="card-footer">
+                <div class="form-inline">
+                  <button type="button" class="btn btn-primary" (click)="verDetallePedido(pedido.id_pedido)">Editar
+                  </button>
+                  <button type="button" class="btn btn-danger" (click)="detelePedido(pedido.id_pedido)">Cancelar
+                  </button>
+                  <button type="button" class="btn btn-success" (click)="setCurrentPedido(pedido)"
+                          data-toggle="collapse" data-target="#pedidosCollapse"
+                          aria-expanded="false" aria-controls="pedidosCollapse"
+                          [disabled]="pedido.estado !== 'SERVIDO'">Cobrar
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="container-fluid">
+  <hr>
   <div class="row">
     <div class="col-md-12">
+      <button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse"
+              data-target="#pedidosCollapse"
+              aria-expanded="false" aria-controls="pedidosCollapse">
+        <svg class="bi bi-caret-down-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <br>
+  <div class="row" *ngIf="currentPedido.codigo">
+    <div [ngClass]="{'col-md-6': split === true, 'col-md-12': split === false}">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">#{{currentPedido.codigo | number:'3.0-0'}}</span>
+            </div>
+            <div class="input-group-prepend">
+              <span class="input-group-text"> Total: {{currentPedido.total | currency}}</span>
+            </div>
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="splitCuenta()">Separar</button>
+            </div>
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="finalizarPedido()">Finalizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col" class="d-none d-sm-table-cell">Precio</th>
+              <th scope="col" class="d-none d-sm-table-cell">Subtotal</th>
+              <th scope="col">Mover</th>
+            </tr>
+            </thead>
 
+            <tbody>
+            <tr *ngIf="currentPedido.items.length == 0; else itemsTable">
+              <td align="center" colspan="5"><h3>Ingresa nuevos items!</h3></td>
+            </tr>
+            <ng-template #itemsTable>
+              <tr *ngFor="let item of currentPedido.items; index as i" [ngClass]="{'table-warning': item.llevar}">
+                <td>{{item.nombre}}</td>
+                <td>{{item.cantidad}}</td>
+                <td class="d-none d-sm-table-cell">{{item.precio | currency}}</td>
+                <td class="d-none d-sm-table-cell">{{item.subtotal | currency}}</td>
+                <td>
+                  <button class="btn btn-primary" type="button" (click)="passItemToAux(item)">
+                    <svg class="bi bi-caret-right-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 011.659-.753l5.48 4.796a1 1 0 010 1.506z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="split" class="col-md-6">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">#{{auxCuenta.codigo | number:'3.0-0'}}/2</span>
+            </div>
+            <div class="input-group-prepend">
+              <span class="input-group-text"> Total: {{auxCuenta.total | currency}}</span>
+            </div>
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">Mover</th>
+          <th scope="col">Item</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col" class="d-none d-sm-table-cell">Precio</th>
+          <th scope="col" class="d-none d-sm-table-cell">Subtotal</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let item of auxCuenta.items; index as i" [ngClass]="{'table-warning': item.llevar}">
+          <td>
+            <button class="btn btn-primary" type="button" (click)="passItemToMain(item)">
+              <svg class="bi bi-caret-left-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M3.86 8.753l5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 00-1.659-.753l-5.48 4.796a1 1 0 000 1.506z"/>
+              </svg>
+            </button>
+          </td>
+          <td>{{item.nombre}}</td>
+          <td>{{item.cantidad}}</td>
+          <td class="d-none d-sm-table-cell">{{item.precio | currency}}</td>
+          <td class="d-none d-sm-table-cell">{{item.subtotal | currency}}</td>
+
+        </tr>
+        </tbody>
+      </table>
 
     </div>
   </div>

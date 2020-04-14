@@ -1,8 +1,10 @@
 import {Producto} from './producto';
 
 export class Item {
+  id_item: number;
   producto: Producto;
   id_producto: string;
+  id_pedido: number;
   pedido: string;
   mesa_str: string;
   nombre: string;
@@ -21,7 +23,12 @@ export class Item {
 
 
   get subtotal(): number {
-    return this.producto.precio * this.cantidad;
+    if ('producto' in this) {
+      return this.producto.precio * this.cantidad;
+    } else {
+      return this.precio * this.cantidad;
+    }
+
   }
 
   toJson() {

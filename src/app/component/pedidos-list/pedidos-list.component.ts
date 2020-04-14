@@ -11,10 +11,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class PedidosListComponent implements OnInit {
 
   pedidos: Array<Pedido> = [];
-  mode: string;
 
-  constructor(private pedidosHandlerService: PedidosHandlerService, private router: Router,
-              private route: ActivatedRoute) {
+
+  constructor(private pedidosHandlerService: PedidosHandlerService, private router: Router) {
   }
 
   verDetallePedido(idPedido) {
@@ -27,19 +26,19 @@ export class PedidosListComponent implements OnInit {
 
   finalizarPedido(currentPedido) {
     console.log(currentPedido);
-    // this.pedidosHandlerService.postChangePedido(idPedido, 'S').subscribe(data => {
-    //     // console.log(data);
-    //     console.log('Entregado');
-    //     for (const pedidoIter of this.pedidos) {
-    //       if (pedidoIter.id_pedido === idPedido) {
-    //         const index = this.pedidos.indexOf(pedidoIter, 0);
-    //         this.pedidos.splice(index, 1);
-    //       }
-    //     }
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   });
+    this.pedidosHandlerService.postChangePedido(currentPedido.id_pedido, 'S').subscribe(data => {
+        // console.log(data);
+        console.log('Entregado');
+        for (const pedidoIter of this.pedidos) {
+          if (pedidoIter.id_pedido === currentPedido.id_pedido) {
+            const index = this.pedidos.indexOf(pedidoIter, 0);
+            this.pedidos.splice(index, 1);
+          }
+        }
+      },
+      error => {
+        console.log(error);
+      });
   }
 
   detelePedido(idPedido) {
