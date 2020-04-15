@@ -26,6 +26,7 @@ export class Item {
     if ('producto' in this) {
       return this.producto.precio * this.cantidad;
     } else {
+      // @ts-ignore
       return this.precio * this.cantidad;
     }
 

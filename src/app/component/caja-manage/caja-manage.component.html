@@ -1,7 +1,12 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <div class="collapse" id="pedidosCollapse">
+      <h3 align="center"> Pedidos actuales</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="collapse show " id="pedidosCollapse">
         <div class="row">
           <div class="col-md-3" *ngFor="let pedido of pedidos">
             <div class="card">
@@ -19,14 +24,36 @@
               </div>
               <div class="card-footer">
                 <div class="form-inline">
-                  <button type="button" class="btn btn-primary" (click)="verDetallePedido(pedido.id_pedido)">Editar
+                  <button type="button" class="btn btn-primary" (click)="verDetallePedido(pedido.id_pedido)">
+                    <svg class="bi bi-hammer" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M9.812 1.952a.5.5 0 01-.312.89c-1.671 0-2.852.596-3.616 1.185L4.857 5.073V6.21a.5.5 0 01-.146.354L3.425 7.853a.5.5 0 01-.708 0L.146 5.274a.5.5 0 010-.706l1.286-1.29a.5.5 0 01.354-.146H2.84C4.505 1.228 6.216.862 7.557 1.04a5.009 5.009 0 012.077.782l.178.129z"/>
+                      <path fill-rule="evenodd"
+                            d="M6.012 3.5a.5.5 0 01.359.165l9.146 8.646A.5.5 0 0115.5 13L14 14.5a.5.5 0 01-.756-.056L4.598 5.297a.5.5 0 01.048-.65l1-1a.5.5 0 01.366-.147z"
+                            clip-rule="evenodd"/>
+                    </svg>
                   </button>
-                  <button type="button" class="btn btn-danger" (click)="detelePedido(pedido.id_pedido)">Cancelar
+                  <button type="button" class="btn btn-danger" (click)="detelePedido(pedido.id_pedido)">
+                    <svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd"
+                            d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z"
+                            clip-rule="evenodd"/>
+                    </svg>
                   </button>
                   <button type="button" class="btn btn-success" (click)="setCurrentPedido(pedido)"
                           data-toggle="collapse" data-target="#pedidosCollapse"
                           aria-expanded="false" aria-controls="pedidosCollapse"
-                          [disabled]="pedido.estado !== 'SERVIDO'">Cobrar
+                          [disabled]="pedido.estado !== 'SERVIDO'">
+                    <svg class="bi bi-file-spreadsheet" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd"
+                            d="M4 1h8a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm0 1a1 1 0 00-1 1v10a1 1 0 001 1h8a1 1 0 001-1V3a1 1 0 00-1-1H4z"
+                            clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M13 6H3V5h10v1zm0 3H3V8h10v1zm0 3H3v-1h10v1z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M5 14V6h1v8H5zm4 0V6h1v8H9z" clip-rule="evenodd"/>
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -42,10 +69,10 @@
       <button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse"
               data-target="#pedidosCollapse"
               aria-expanded="false" aria-controls="pedidosCollapse">
-        <svg class="bi bi-caret-down-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+        <svg class="bi bi-caret-up-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
              xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z"/>
+            d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 00.753-1.659l-4.796-5.48a1 1 0 00-1.506 0z"/>
         </svg>
       </button>
     </div>
@@ -78,12 +105,12 @@
             <tr>
               <th scope="col">Item</th>
               <th scope="col">Cantidad</th>
-              <th scope="col" class="d-none d-sm-table-cell">Precio</th>
-              <th scope="col" class="d-none d-sm-table-cell">Subtotal</th>
-              <th scope="col">Mover</th>
+              <th scope="col" class="d-none d-sm-table-cell">Especificacion</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Subtotal</th>
+              <th scope="col" *ngIf="split">Mover</th>
             </tr>
             </thead>
-
             <tbody>
             <tr *ngIf="currentPedido.items.length == 0; else itemsTable">
               <td align="center" colspan="5"><h3>Ingresa nuevos items!</h3></td>
@@ -92,9 +119,10 @@
               <tr *ngFor="let item of currentPedido.items; index as i" [ngClass]="{'table-warning': item.llevar}">
                 <td>{{item.nombre}}</td>
                 <td>{{item.cantidad}}</td>
-                <td class="d-none d-sm-table-cell">{{item.precio | currency}}</td>
-                <td class="d-none d-sm-table-cell">{{item.subtotal | currency}}</td>
-                <td>
+                <td class="d-none d-sm-table-cell">{{item.especificacion}}</td>
+                <td>{{item.precio | currency}}</td>
+                <td>{{item.subtotal | currency}}</td>
+                <td *ngIf="split">
                   <button class="btn btn-primary" type="button" (click)="passItemToAux(item)">
                     <svg class="bi bi-caret-right-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
                          xmlns="http://www.w3.org/2000/svg">
@@ -121,20 +149,24 @@
             <div class="input-group-prepend">
               <span class="input-group-text"> Total: {{auxCuenta.total | currency}}</span>
             </div>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="button">Eliminar</button>
-            </div>
+            <!--            <div class="input-group-append">-->
+            <!--              <button class="btn btn-outline-secondary" type="button">Nueva cuenta</button>-->
+            <!--            </div>-->
+            <!--            <div class="input-group-append">-->
+            <!--              <button class="btn btn-outline-secondary" type="button">Eliminar</button>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>
+
       <table class="table">
         <thead>
         <tr>
           <th scope="col">Mover</th>
           <th scope="col">Item</th>
           <th scope="col">Cantidad</th>
-          <th scope="col" class="d-none d-sm-table-cell">Precio</th>
-          <th scope="col" class="d-none d-sm-table-cell">Subtotal</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Subtotal</th>
         </tr>
         </thead>
 
@@ -151,8 +183,8 @@
           </td>
           <td>{{item.nombre}}</td>
           <td>{{item.cantidad}}</td>
-          <td class="d-none d-sm-table-cell">{{item.precio | currency}}</td>
-          <td class="d-none d-sm-table-cell">{{item.subtotal | currency}}</td>
+          <td>{{item.precio | currency}}</td>
+          <td>{{item.subtotal | currency}}</td>
 
         </tr>
         </tbody>
