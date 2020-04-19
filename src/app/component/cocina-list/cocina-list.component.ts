@@ -29,8 +29,8 @@ export class CocinaListComponent implements OnInit {
   finalizarPedido(idPedido) {
     this.pedidosHandlerService.postChangePedido(idPedido, 'C').subscribe(data => {
         // console.log(data);
-        console.log('Entregado');
-        console.log(this.itemsList);
+        // console.log('Entregado');
+        // console.log(this.itemsList);
         for (const pedidoIter of this.pedidos) {
           if (pedidoIter.id_pedido === idPedido) {
             const index = this.pedidos.indexOf(pedidoIter, 0);
@@ -38,9 +38,9 @@ export class CocinaListComponent implements OnInit {
           }
         }
         for (const itemAux of this.itemsList) {
-          if (itemAux.pedido === idPedido) {
+          if (itemAux.id_pedido === idPedido) {
             const index = this.itemsList.indexOf(itemAux, 0);
-            this.pedidos.splice(index, 1);
+            this.itemsList.splice(index, 1);
           }
         }
       },
@@ -54,15 +54,14 @@ export class CocinaListComponent implements OnInit {
         // console.log(data);
         this.pedidos = data;
         this.pedidos.map(pedidoIter => {
-
           pedidoIter.items.map(itemIter => {
-            itemIter.pedido = '#' + pedidoIter.codigo;
+            itemIter.id_pedido = pedidoIter.id_pedido;
+            itemIter.pedido = pedidoIter.codigo;
             if (pedidoIter.llevar) {
               itemIter.mesa_str = 'Llevar';
             } else {
               itemIter.mesa_str = pedidoIter.mesa_str;
             }
-
             this.itemsList.push(itemIter);
           });
         });

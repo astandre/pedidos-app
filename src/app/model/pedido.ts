@@ -11,6 +11,7 @@ export class Pedido {
   codigo: string;
   llevar: boolean;
   fecha: Date;
+  user: string;
 
   private _estado: string;
 
@@ -18,6 +19,7 @@ export class Pedido {
   constructor() {
     this.llevar = false;
     this.items = [];
+    this.user = '';
   }
 
   toJson() {
@@ -26,7 +28,7 @@ export class Pedido {
       final_items.push(entry.toJson());
     }
     const auxJSON = {
-      items: final_items, llevar: this.llevar
+      items: final_items, llevar: this.llevar, estado: this._estado, user: this.user
     };
     if (this.id_pedido != null) {
       auxJSON['id_pedido'] = this.id_pedido;

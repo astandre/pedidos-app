@@ -13,6 +13,8 @@ export class Item {
   precio: number;
   especificacion: string;
   llevar: boolean;
+  entregado: boolean;
+  cocinado: boolean;
 
   constructor() {
     this.llevar = false;
@@ -37,7 +39,9 @@ export class Item {
       id_producto: this.producto.id_producto,
       cantidad: this.cantidad,
       especificacion: this.especificacion,
-      llevar: this.llevar
+      llevar: this.llevar,
+      entregado: this.entregado,
+      cocinado: this.cocinado
     };
   }
 }

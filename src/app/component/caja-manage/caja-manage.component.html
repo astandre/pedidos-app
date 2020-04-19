@@ -11,16 +11,16 @@
           <div class="col-md-3" *ngFor="let pedido of pedidos">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">
-                  #{{pedido.codigo | number:'3.0-0'}} </h5>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item" *ngIf="pedido.llevar; else pedidoNotLlevar">Llevar</li>
-                  <li class="list-group-item">{{pedido.estado}}</li>
-                  <li class="list-group-item">{{ pedido.fecha | date :'shortTime'}}</li>
-                </ul>
+                <h5 class="card-title" *ngIf="pedido.llevar; else pedidoNotLlevar">
+                  #{{pedido.codigo | number:'3.0-0'}} (Llevar) [{{ pedido.fecha | date :'shortTime'}}]</h5>
                 <ng-template #pedidoNotLlevar>
-                  <li class="list-group-item">({{pedido.mesa_str}})</li>
+                  <h5 class="card-title">#{{pedido.codigo | number:'3.0-0'}} ({{pedido.mesa_str}})
+                    [{{ pedido.fecha | date :'shortTime'}}]</h5>
                 </ng-template>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">{{pedido.estado}}</li>
+                  <li class="list-group-item">{{pedido.user}}</li>
+                </ul>
               </div>
               <div class="card-footer">
                 <div class="form-inline">

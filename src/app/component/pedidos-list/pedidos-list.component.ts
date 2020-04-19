@@ -11,7 +11,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class PedidosListComponent implements OnInit {
 
   pedidos: Array<Pedido> = [];
-
+  pedidosActual: Array<Pedido> = [];
+  pedidosTodos: Array<Pedido> = [];
+  display = true;
 
   constructor(private pedidosHandlerService: PedidosHandlerService, private router: Router) {
   }
@@ -22,6 +24,16 @@ export class PedidosListComponent implements OnInit {
 
   nuevoPedido() {
     this.router.navigate(['/pedido']);
+  }
+
+  displayActuales() {
+    this.display = true;
+    this.pedidos = this.pedidosActual;
+  }
+
+  displayTodos() {
+    this.display = false;
+    this.pedidos = this.pedidosTodos;
   }
 
   finalizarPedido(currentPedido) {
@@ -60,7 +72,16 @@ export class PedidosListComponent implements OnInit {
   ngOnInit() {
     this.pedidosHandlerService.getPedidosPrep().subscribe(data => {
         // console.log(data);
+        this.pedidosActual = data;
         this.pedidos = data;
+      },
+      error => {
+        console.log(error);
+      });
+
+    this.pedidosHandlerService.getPedidosEstado('A').subscribe(data => {
+        // console.log(data);
+        this.pedidosTodos = data;
       },
       error => {
         console.log(error);

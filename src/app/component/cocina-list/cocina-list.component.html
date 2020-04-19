@@ -21,24 +21,23 @@
         <div class="card table-responsive" [ngClass]="{'border-warning ': pedido.llevar}">
           <div class="card-body">
             <h5 class="card-title" *ngIf="pedido.llevar; else pedidoNotLlevar">
-              #{{pedido.codigo | number:'3.0-0'}} (Llevar)[{{ pedido.fecha | date :'shortTime'}}]</h5>
+              #{{pedido.codigo | number:'3.0-0'}} (Llevar)</h5>
             <ng-template #pedidoNotLlevar>
-              <h5 class="card-title">#{{pedido.codigo| number:'3.0-0'}}({{pedido.mesa_str}}
-                )[{{ pedido.fecha | date :'shortTime'}}]</h5>
+              <h5 class="card-title">#{{pedido.codigo| number:'3.0-0'}}({{pedido.mesa_str}})</h5>
             </ng-template>
             <table class="table">
               <thead>
               <tr>
                 <th scope="col">Item</th>
-                <th scope="col">Cantidad</th>
+                <th scope="col">#</th>
                 <th scope="col">Especificacion</th>
               </tr>
               </thead>
               <tbody>
               <tr *ngFor="let item of pedido.items;" [ngClass]="{'table-warning': item.llevar}">
-                <td>{{item.nombre}}</td>
-                <td>{{item.cantidad}}</td>
-                <td>{{item.especificacion}}</td>
+                <td *ngIf="!item.cocinado">{{item.nombre}}</td>
+                <td *ngIf="!item.cocinado">{{item.cantidad}}</td>
+                <td *ngIf="!item.cocinado">{{item.especificacion}}</td>
               </tr>
               </tbody>
             </table>
@@ -66,11 +65,11 @@
           </thead>
           <tbody>
           <tr *ngFor="let item of itemsList;" [ngClass]="{'table-warning': item.llevar}">
-            <td>{{item.nombre}}</td>
-            <td>{{item.cantidad}}</td>
-            <td>{{item.especificacion}}</td>
-            <td>{{item.pedido }}</td>
-            <td>{{item.mesa_str}}</td>
+            <td *ngIf="!item.cocinado">{{item.nombre}}</td>
+            <td *ngIf="!item.cocinado">{{item.cantidad}}</td>
+            <td *ngIf="!item.cocinado">{{item.especificacion}}</td>
+            <td *ngIf="!item.cocinado">#{{item.pedido | number:'3.0-0'}}</td>
+            <td *ngIf="!item.cocinado">{{item.mesa_str}}</td>
           </tr>
           </tbody>
         </table>

@@ -5,30 +5,47 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-2  col-xs-12  offset-xs-2">
-      <a type="button" class="btn btn-outline-secondary">
-        <div class="form-check">
-          <input id="llevarPedido" type="checkbox" class="form-check-input" [(ngModel)]=" pedido.llevar"
-                 [ngModelOptions]="{standalone: true}">
-          <label for="llevarPedido" class="form-check-label">¿Pedido para llevar?</label>
+    <div class="col-md-6  col-xs-12">
+      <form class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="exampleInputEmail1">Nombre: </label>
+          <input [(ngModel)]="pedido.user" type="text" class="form-control" id="exampleInputEmail1"
+                 [ngModelOptions]="{standalone: true}" aria-describedby="emailHelp" placeholder="Nombre del cliente">
         </div>
-      </a>
-    </div>
-    <hr class="d-block d-sm-none">
-    <div class="col-md-3 col-xs-12" *ngIf="!pedido.llevar">
-      <div class="input-group mb-2">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="mesaOptions">Mesas:</label>
-        </div>
-        <select class="custom-select" id="mesaOptions" [(ngModel)]="pedido.mesa">
-          <option *ngFor="let mesa of mesas; index as i" [ngValue]="mesa">{{mesa.mesa}}</option>
-        </select>
-      </div>
+        <!--        <div class="form-group mx-sm-3 mb-2">-->
+        <!--          <a type="button" class="btn btn-outline-secondary">-->
+        <!--            <div class="form-check mr-2">-->
+        <!--              <input type="checkbox" class="form-check-input" id="exampleCheck1" [ngModel]="pedido.user.factura"-->
+        <!--                     [ngModelOptions]="{standalone: true}">-->
+        <!--              <label class="form-check-label" for="exampleCheck1">¿Factura?</label>-->
+        <!--            </div>-->
+        <!--          </a>-->
+        <!--        </div>-->
 
+      </form>
     </div>
-    <div class="col-md-4 col-xs-12">
-      <div class="btn-toolbar" role="toolbar" aria-label="Controles Pedido">
-        <div class="btn-group mr-2" role="group" aria-label="First group">
+    <div class="col-md-6  col-xs-12  offset-xs-2">
+      <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="input-group mb-2 mr-2" aria-label="First group">
+          <a type="button" class="btn btn-outline-secondary">
+            <div class="form-check">
+              <input id="llevarPedido" type="checkbox" class="form-check-input" [(ngModel)]=" pedido.llevar"
+                     [ngModelOptions]="{standalone: true}">
+              <label for="llevarPedido" class="form-check-label">¿Pedido para llevar?</label>
+            </div>
+          </a>
+        </div>
+        <div class="input-group mb-2 mr-2" *ngIf="!pedido.llevar">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="mesaOptions">Mesas:</label>
+            <select class="custom-select"
+                    id="mesaOptions"
+                    [(ngModel)]="pedido.mesa">
+              <option *ngFor="let mesa of mesas; index as i" [ngValue]="mesa">{{mesa.mesa}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-group mb-2 mr-2" role="group" aria-label="Third group">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productosModal">
             Nuevo item
           </button>
@@ -37,23 +54,31 @@
             Previsualizar
           </button>
           <button type="button" class="btn btn-success"
-                  [disabled]="pedido.estado === 'COMPLETO' || pedido.estado === 'PREPARADO'"
+                  [disabled]="pedido.estado === 'PAGADO'"
                   (click)="sendPedido()">Enviar
           </button>
           <button type="button" class="btn btn-danger" (click)="deletePedido()">Borrar</button>
         </div>
       </div>
     </div>
-
   </div>
-
-  <hr>
 
   <div class="row">
     <div class="col-md-12">
       <table class="table">
         <thead>
         <tr>
+          <th scope="col">
+            <svg class="bi bi-bookmark-check" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                    d="M4.5 2a.5.5 0 00-.5.5v11.066l4-2.667 4 2.667V8.5a.5.5 0 011 0v6.934l-5-3.333-5 3.333V2.5A1.5 1.5 0 014.5 1h4a.5.5 0 010 1h-4z"
+                    clip-rule="evenodd"/>
+              <path fill-rule="evenodd"
+                    d="M15.854 2.146a.5.5 0 010 .708l-3 3a.5.5 0 01-.708 0l-1.5-1.5a.5.5 0 01.708-.708L12.5 4.793l2.646-2.647a.5.5 0 01.708 0z"
+                    clip-rule="evenodd"/>
+            </svg>
+          </th>
           <th scope="col">Item</th>
           <th scope="col">Cantidad</th>
           <th scope="col" class="d-none d-sm-table-cell">Precio</th>
@@ -71,6 +96,33 @@
 
         <ng-template #itemsTable>
           <tr *ngFor="let item of pedido.items; index as i" [ngClass]="{'table-warning': item.llevar}">
+            <td *ngIf="item.cocinado && !item.entregado">
+              <svg class="bi bi-check" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                      d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z"
+                      clip-rule="evenodd"/>
+              </svg>
+            </td>
+            <td *ngIf="item.entregado && item.cocinado">
+              <svg class="bi bi-check-all" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                      d="M12.354 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L5 10.293l6.646-6.647a.5.5 0 01.708 0z"
+                      clip-rule="evenodd"/>
+                <path
+                  d="M6.25 8.043l-.896-.897a.5.5 0 10-.708.708l.897.896.707-.707zm1 2.414l.896.897a.5.5 0 00.708 0l7-7a.5.5 0 00-.708-.708L8.5 10.293l-.543-.543-.707.707z"/>
+              </svg>
+            </td>
+            <td *ngIf="!item.cocinado && !item.entregado">
+              <svg class="bi bi-exclamation-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z"
+                      clip-rule="evenodd"/>
+                <path
+                  d="M7.002 11a1 1 0 112 0 1 1 0 01-2 0zM7.1 4.995a.905.905 0 111.8 0l-.35 3.507a.552.552 0 01-1.1 0L7.1 4.995z"/>
+              </svg>
+            </td>
             <td>{{item.producto.nombre}}</td>
             <td>{{item.cantidad}}</td>
             <td class="d-none d-sm-table-cell">{{item.producto.precio | currency}}</td>
@@ -79,6 +131,7 @@
             <!--For editar-->
             <td>
               <button type="button" class="btn btn-warning" data-target="#itemsModal" data-toggle="modal"
+                      [disabled]="pedido.estado === 'SERVIDO'"
                       (click)="editItem(i)">
                 <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
                      xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +143,8 @@
             </td>
             <!--For delete -->
             <td>
-              <button type="button" class="btn btn-danger" (click)="deleteItem(i)">
+              <button type="button" class="btn btn-danger" [disabled]="pedido.estado === 'SERVIDO'"
+                      (click)="deleteItem(i)">
                 <svg class="bi bi-backspace-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
                      xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd"
@@ -142,7 +196,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>

@@ -45,6 +45,8 @@ export class PedidosManageComponent implements OnInit {
   newItem(newItem: Producto) {
     this.newItemAux = new Item();
     this.newItemAux.producto = newItem;
+    this.newItemAux.entregado = false;
+    this.newItemAux.cocinado = false;
     if (this.pedido.llevar) {
       this.newItemAux.llevar = true;
     }
@@ -92,6 +94,7 @@ export class PedidosManageComponent implements OnInit {
   }
 
   sendPedido() {
+    console.log(this.pedido);
     let sendOk = false;
     if (this.pedido.items.length > 0) {
       if (this.pedido.llevar) {
@@ -99,10 +102,14 @@ export class PedidosManageComponent implements OnInit {
       } else if (this.pedido.mesa != null) {
         sendOk = true;
       }
+      for (const item of this.pedido.items) {
+        if (!item.cocinado) {
+          this.pedido.estado = 'P';
+          break;
+        }
+      }
     }
     if (sendOk) {
-      // this.pedido.mesa = this.currentMesa;
-      // this.pedido.items = this.items;
       this.pedidosHandlerService.postPedido(this.pedido)
         .subscribe(data => {
             console.log('sendPedido ', data);
@@ -155,7 +162,7 @@ export class PedidosManageComponent implements OnInit {
           this.categorias = data[0];
           this.mesas = data[1];
           this.pedidosHandlerService.getPedido(idPedido).subscribe(pedidoData => {
-              // console.log('raw pedido', data);
+              console.log('raw pedido', data);
               this.pedido = pedidoData;
               // Finding mesa OBJ
               this.pedido.mesa = this.findMesa(this.pedido.id_mesa);
@@ -173,6 +180,7 @@ export class PedidosManageComponent implements OnInit {
 
       } else {
         console.log('Setting new pedido');
+        this.pedido.estado = 'P';
         this.getInitialData().subscribe(data => {
             // console.log(data);
             this.categorias = data[0];

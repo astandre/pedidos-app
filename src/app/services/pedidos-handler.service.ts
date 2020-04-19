@@ -7,6 +7,7 @@ import {Categoria} from '../model/categoria';
 import {Mesa} from '../model/mesa';
 import {Pedido} from '../model/pedido';
 import {Item} from '../model/item';
+import {environment} from '../../environments/environment';
 
 
 const httpOptions = {
@@ -19,7 +20,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class PedidosHandlerService {
-  baseURL = 'http://127.0.0.1:8000';
+  baseURL = environment.baseURL;
 
   constructor(private http: HttpClient) {
   }
@@ -110,7 +111,9 @@ export class PedidosHandlerService {
             auxItem.precio = itemProd.precio;
             auxItem.cantidad = itemProd.cantidad;
             auxItem.llevar = itemProd.llevar;
-            auxItem.id_pedido = item.id_pedido;
+            auxItem.id_pedido = itemProd.id_pedido;
+            auxItem.entregado = itemProd.entregado;
+            auxItem.cocinado = itemProd.cocinado;
             if ('especificacion' in itemProd) {
               auxItem.especificacion = itemProd.especificacion;
             }
@@ -127,6 +130,7 @@ export class PedidosHandlerService {
           pedidoAux.llevar = item.llevar;
           pedidoAux.items = items;
           pedidoAux.mesa_str = item.mesa;
+          pedidoAux.user = item.user;
           pedidoAux.fecha = new Date(item.fecha);
 
           return pedidoAux;
@@ -147,6 +151,8 @@ export class PedidosHandlerService {
           auxItem.precio = itemProd.precio;
           auxItem.cantidad = itemProd.cantidad;
           auxItem.llevar = itemProd.llevar;
+          auxItem.entregado = itemProd.entregado;
+          auxItem.cocinado = itemProd.cocinado;
           if ('especificacion' in itemProd) {
             auxItem.especificacion = itemProd.especificacion;
           }
@@ -160,6 +166,7 @@ export class PedidosHandlerService {
         auxPedido.codigo = res['pedido'].codigo;
         auxPedido.llevar = res['pedido'].llevar;
         auxPedido.fecha = res['pedido'].fecha;
+        auxPedido.user = res['pedido'].user;
         auxPedido.estado = res['pedido'].estado;
         auxPedido.total = res['pedido'].total;
         auxPedido.items = items;
