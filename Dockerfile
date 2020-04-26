@@ -1,5 +1,5 @@
 # base image
-FROM node:12.2.0
+FROM node:14.0-alpine
 
 # set working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 # install and cache app dependencies
 COPY package.json /app/package.json
 RUN npm install
-RUN npm install -g @angular/cli@8.2.14
+RUN npm install -g @angular/cli
 
 # add app
 COPY . /app

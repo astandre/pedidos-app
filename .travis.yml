@@ -12,5 +12,5 @@ jobs:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t pedidos_frontend . -f Dockerfile
         - docker images
-        - docker tag pedidos_backend $DOCKER_USERNAME/pedidos_frontend
+        - docker tag pedidos_frontend $DOCKER_USERNAME/pedidos_frontend
         - docker push $DOCKER_USERNAME/pedidos_frontend
